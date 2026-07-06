@@ -13,9 +13,9 @@
 | Area | Status |
 |---|---|
 | Scope definition | In progress |
-| Backend scaffold | Not started |
-| Frontend scaffold | Not started |
-| Database schema | Not started |
+| Backend scaffold | Auth slice working: super admin bootstrap, JWT login, forced password change, audit logging |
+| Frontend scaffold | Expo app working: login → forced password change → home, wired to the backend API |
+| Database schema | V1 auth-core tables migrated (`tenants`, `users`, `roles`, `permissions`, `role_permissions`, `user_roles`, `audit_logs`) |
 | Deployment | Not started |
 
 _Update this table as work lands — it's the fastest way for anyone (including future you) to see real progress vs. plan._
@@ -110,4 +110,32 @@ The rest of the spec lives in `/docs` so each part stays a manageable size as sc
 
 ## Getting Started
 
-_To be filled in once the backend and frontend scaffolds exist (repo layout, local dev setup, environment variables, migrations, seed data)._
+### Repo layout
+
+- `backend/` — Rust (Axum + SQLx) API
+- `mobile/` — Expo (React Native + TypeScript) app
+- `docs/` — scope and architecture specs (see [Documentation](#documentation))
+
+### Backend
+
+Requires Rust, PostgreSQL, and (on Windows) the MSVC C++ build tools.
+
+```
+cd backend
+copy .env.example .env   # fill in DATABASE_URL, JWT_SECRET, SUPER_ADMIN_EMAIL
+cargo install sqlx-cli --no-default-features --features rustls,postgres
+sqlx migrate run
+cargo run
+```
+
+On first startup, if no super admin exists yet, one is created from `SUPER_ADMIN_EMAIL` with a random temporary password printed to the log once — it must be changed via `/api/auth/change-password` on first login. Windows note: if `cargo build` fails to find `link.exe`, dot-source `backend/dev-env.ps1` first — Git Bash's own `link.exe` can shadow the real MSVC linker in `PATH`.
+
+### Mobile
+
+```
+cd mobile
+npm install
+npx expo start
+```
+
+The app points at `http://localhost:8080/api` in development (`10.0.2.2` on the Android emulator, see `mobile/src/api/client.ts`).

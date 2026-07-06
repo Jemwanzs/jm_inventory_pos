@@ -1,0 +1,22 @@
+# Rust
+backend/target/
+**/*.rs.bk
+
+# Env files
+.env
+*.env
+!*.env.example
+
+# Node / React Native
+mobile/node_modules/
+mobile/.expo/
+mobile/dist/
+mobile/npm-debug.*
+mobile/yarn-error.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.claude/
