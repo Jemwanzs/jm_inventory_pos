@@ -6,6 +6,8 @@ pub struct Config {
     pub jwt_secret: String,
     pub port: u16,
     pub super_admin_email: String,
+    pub resend_api_key: Option<String>,
+    pub email_from: String,
 }
 
 impl Config {
@@ -17,6 +19,8 @@ impl Config {
                 .unwrap_or_else(|_| "8080".to_string())
                 .parse()?,
             super_admin_email: env::var("SUPER_ADMIN_EMAIL")?,
+            resend_api_key: env::var("RESEND_API_KEY").ok().filter(|key| !key.is_empty()),
+            email_from: env::var("EMAIL_FROM").unwrap_or_else(|_| "onboarding@resend.dev".to_string()),
         })
     }
 }

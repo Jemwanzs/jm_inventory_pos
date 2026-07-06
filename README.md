@@ -14,9 +14,9 @@
 |---|---|
 | Scope definition | In progress |
 | Backend scaffold | Auth slice working: super admin bootstrap, JWT login, forced password change, audit logging |
-| Frontend scaffold | Expo app working: login → forced password change → home, wired to the backend API |
+| Frontend scaffold | Expo app working: branded login → forced password change → full app shell (sidebar/bottom nav, dashboard) |
 | Database schema | V1 auth-core tables migrated (`tenants`, `users`, `roles`, `permissions`, `role_permissions`, `user_roles`, `audit_logs`) |
-| Deployment | Not started |
+| Deployment | Repo pushed to [GitHub](https://github.com/Jemwanzs/jm_inventory_pos); backend Dockerfile + Railway config ready, not yet deployed — see [docs/deployment.md](docs/deployment.md) |
 
 _Update this table as work lands — it's the fastest way for anyone (including future you) to see real progress vs. plan._
 
@@ -108,6 +108,7 @@ The rest of the spec lives in `/docs` so each part stays a manageable size as sc
 | [docs/ui-ux.md](docs/ui-ux.md) | Design system, mobile/tablet/desktop layout behavior, screen-by-screen UI spec, and cross-cutting UX controls (empty/loading/error states, audit trail panel, etc.) |
 | [docs/screens.md](docs/screens.md) | Full screen inventory (~148 screens across 18 sidebar sections), route naming convention, and the per-screen contract (breadcrumbs, filters, states, permissions, audit impact) every screen must meet |
 | [docs/roadmap.md](docs/roadmap.md) | V1 development priorities, recommended fast-follow priorities, future enhancements |
+| [docs/deployment.md](docs/deployment.md) | Railway deployment checklist, why the backend builds via Docker + SQLx offline mode, required environment variables |
 
 ---
 

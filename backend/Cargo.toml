@@ -21,6 +21,8 @@ jsonwebtoken = "9"
 argon2 = "0.5"
 rand = "0.8"
 
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+
 dotenvy = "0.15"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }

@@ -1,4 +1,4 @@
-← [README](../README.md) · [Architecture](architecture.md) · [Database](database.md) · [Backend Architecture](backend-architecture.md) · [UI/UX](ui-ux.md) · [Screens](screens.md) · [Roadmap](roadmap.md)
+← [README](../README.md) · [Architecture](architecture.md) · [Database](database.md) · [Backend Architecture](backend-architecture.md) · [UI/UX](ui-ux.md) · [Screens](screens.md) · [Roadmap](roadmap.md) · [Deployment](deployment.md)
 
 ---
 

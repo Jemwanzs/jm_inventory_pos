@@ -2,6 +2,7 @@ mod audit;
 mod auth;
 mod bootstrap;
 mod config;
+mod email;
 mod error;
 mod routes;
 mod state;
@@ -12,6 +13,7 @@ use sqlx::postgres::PgPoolOptions;
 use tower_http::{cors::CorsLayer, trace::TraceLayer};
 
 use config::Config;
+use email::EmailClient;
 use state::AppState;
 
 #[tokio::main]
@@ -33,9 +35,12 @@ async fn main() -> anyhow::Result<()> {
 
     bootstrap::ensure_super_admin(&db, &config.super_admin_email).await?;
 
+    let email = EmailClient::new(config.resend_api_key.clone(), config.email_from.clone());
+
     let state = AppState {
         db,
         config: Arc::new(config.clone()),
+        email,
     };
 
     let app = routes::router()
