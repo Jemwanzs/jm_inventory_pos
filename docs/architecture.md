@@ -1,4 +1,4 @@
-← [README](../README.md) · [Core Modules](modules.md) · [Database](database.md) · [Roadmap](roadmap.md)
+← [README](../README.md) · [Core Modules](modules.md) · [Database](database.md) · [Backend Architecture](backend-architecture.md) · [UI/UX](ui-ux.md) · [Roadmap](roadmap.md)
 
 ---
 
@@ -53,7 +53,11 @@ Because the platform is so configurable, a new tenant should never be dropped in
 2. **Business Structure** — create branches, stores, warehouses, departments, counters
 3. **Inventory Preferences** — product numbering, stock valuation method, stock approval rules, stock alerts, negative stock policy
 4. **POS Setup** — receipt format, payment methods, cashier rules, sales taxes, returns
-5. **Users** — create managers, cashiers, store users, approvers
+5. **Users and Roles** — create managers, cashiers, store users, approvers
+6. **Opening Stock Import** — bulk-load starting inventory via [Module X, Data Import & Migration Center](modules.md#x-data-import--migration-center) rather than manual entry
+7. **Review and Go Live** — a final summary of everything configured before the tenant starts transacting
+
+Show a visible progress indicator (e.g. "40% complete") through these steps rather than presenting them as a flat, ungrounded form — see [First-Login / Setup Wizard](ui-ux.md#first-login--setup-wizard) for the UI treatment.
 
 **Industry Templates / Presets** — at step 1, the industry choice (Retail, Electronics, Hardware, Restaurant, Bar, Hotel, Pharmacy, Printing, Wholesale, Distribution, ...) can map to a full preset bundle, not just suggestions: the matching modules, custom fields, workflows, reports, and POS layout are enabled automatically. This turns the wizard from a checklist into a real accelerator for onboarding a new tenant.
 
@@ -132,12 +136,7 @@ Since modules are toggleable per tenant ([Section 4](#4-saas-platform--subscript
 
 Cross-cutting technical decisions that support the full [module catalog](modules.md) at scale.
 
-**Schema separation** — avoid one giant database schema; group tables by domain:
-- *Core* — tenants, users, roles, subscriptions
-- *Inventory* — products, stock, warehouses
-- *Sales* — invoices, POS, payments
-- *Finance* — transactions, reports
-- *Audit* — logs, history
+**Schema separation** — avoid one giant database schema; group tables by domain (core, inventory, procurement, sales, finance, workflow, documents, audit, settings) — see [Backend Architecture: Database Organized by Domain](backend-architecture.md#database-organized-by-domain) for the full breakdown.
 
 **Event-driven architecture** — domain events fan out to independent handlers instead of one monolithic transaction. E.g. "Sale Completed" fires: reduce stock, generate receipt, update reports, notify manager, update analytics. Recommended messaging layer: NATS, Kafka, or RabbitMQ alongside the Rust backend.
 
@@ -150,7 +149,7 @@ Cross-cutting technical decisions that support the full [module catalog](modules
 ## 12. Security Requirements
 
 - Secure login, hashed passwords, password reset
-- JWT access tokens + refresh tokens
+- JWT access tokens + refresh tokens, with session expiry handling
 - Role-based access control
 - Maker-checker enforcement on sensitive actions ([Module AF](modules.md#af-maker-checker-controls))
 - Tenant data isolation
@@ -166,3 +165,5 @@ Cross-cutting technical decisions that support the full [module catalog](modules
 Priority screens: Login, Dashboard, Product list, Add product, Stock entry, POS screen, Sales checkout, Reports, Approval inbox, Settings.
 
 Design principles: fast loading, simple navigation, large touch-friendly buttons, clear forms, quick search, barcode-ready flow, offline-ready POS consideration (see [Module AK](modules.md#ak-offline-mode-architecture)), smooth tablet/desktop experience.
+
+Full screen-by-screen UI spec, design system, and layout behavior across mobile/tablet/desktop now live in **[docs/ui-ux.md](ui-ux.md)** — this section stays as the one-paragraph summary.

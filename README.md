@@ -103,7 +103,9 @@ The rest of the spec lives in `/docs` so each part stays a manageable size as sc
 |---|---|
 | [docs/architecture.md](docs/architecture.md) | Multi-tenant structure, SaaS/subscription management, business setup wizard, access & user management, roles & permissions, sidebar navigation, platform & infrastructure architecture, security requirements, mobile-first UX |
 | [docs/modules.md](docs/modules.md) | Full core module catalog (A–BT): dashboard, settings, product/stock/procurement/sales/customer/supplier management, documents, reports, and every extended module (variants, pricing, valuation, cash management, production, compliance, AI assistant, etc.) |
-| [docs/database.md](docs/database.md) | Audit log requirements and the initial database table structure |
+| [docs/database.md](docs/database.md) | Audit log requirements and the database table structure, grouped by domain schema |
+| [docs/backend-architecture.md](docs/backend-architecture.md) | Backend service goals, field-level schemas for core tables, generic approval/documents architecture, REST API structure, stock/POS transaction rules, background jobs, reporting architecture, and target folder structure |
+| [docs/ui-ux.md](docs/ui-ux.md) | Design system, mobile/tablet/desktop layout behavior, screen-by-screen UI spec, and cross-cutting UX controls (empty/loading/error states, audit trail panel, etc.) |
 | [docs/roadmap.md](docs/roadmap.md) | V1 development priorities, recommended fast-follow priorities, future enhancements |
 
 ---
