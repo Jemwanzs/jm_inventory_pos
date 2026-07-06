@@ -1,4 +1,4 @@
-← [README](../README.md) · [Core Modules](modules.md) · [Database](database.md) · [Backend Architecture](backend-architecture.md) · [UI/UX](ui-ux.md) · [Roadmap](roadmap.md)
+← [README](../README.md) · [Core Modules](modules.md) · [Database](database.md) · [Backend Architecture](backend-architecture.md) · [UI/UX](ui-ux.md) · [Screens](screens.md) · [Roadmap](roadmap.md)
 
 ---
 
@@ -123,6 +123,7 @@ Proposed top-level navigation for the tenant-facing app:
 - Approvals Center
 - Notifications
 - Reports & Analytics
+- Data Quality Center
 - AI Business Assistant
 - Integrations
 - Administration

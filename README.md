@@ -106,6 +106,7 @@ The rest of the spec lives in `/docs` so each part stays a manageable size as sc
 | [docs/database.md](docs/database.md) | Audit log requirements and the database table structure, grouped by domain schema |
 | [docs/backend-architecture.md](docs/backend-architecture.md) | Backend service goals, field-level schemas for core tables, generic approval/documents architecture, REST API structure, stock/POS transaction rules, background jobs, reporting architecture, and target folder structure |
 | [docs/ui-ux.md](docs/ui-ux.md) | Design system, mobile/tablet/desktop layout behavior, screen-by-screen UI spec, and cross-cutting UX controls (empty/loading/error states, audit trail panel, etc.) |
+| [docs/screens.md](docs/screens.md) | Full screen inventory (~148 screens across 18 sidebar sections), route naming convention, and the per-screen contract (breadcrumbs, filters, states, permissions, audit impact) every screen must meet |
 | [docs/roadmap.md](docs/roadmap.md) | V1 development priorities, recommended fast-follow priorities, future enhancements |
 
 ---

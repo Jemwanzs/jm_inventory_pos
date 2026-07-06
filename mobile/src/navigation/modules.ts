@@ -24,6 +24,7 @@ export const MODULES: ModuleDef[] = [
   { key: "Approvals", label: "Approvals Center", icon: "checkmark-done-outline", description: "Pending, approved, and rejected requests." },
   { key: "Notifications", label: "Notifications", icon: "notifications-outline", description: "Alerts, reminders, and system messages." },
   { key: "Reports", label: "Reports & Analytics", icon: "bar-chart-outline", description: "Business reports and trend analysis." },
+  { key: "DataQuality", label: "Data Quality Center", icon: "shield-half-outline", description: "Missing, risky, and abnormal records that need attention." },
   { key: "AIAssistant", label: "AI Assistant", icon: "sparkles-outline", description: "Ask questions about your business data." },
   { key: "Integrations", label: "Integrations", icon: "git-network-outline", description: "External systems and API connections." },
   { key: "Administration", label: "Administration", icon: "shield-checkmark-outline", description: "Tenant, user, and role management." },

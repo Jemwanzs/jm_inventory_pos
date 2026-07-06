@@ -41,7 +41,12 @@ export function Sidebar({ activeRoute, onNavigate }: SidebarProps) {
         {!collapsed && <Text style={styles.brandLabel}>JMS Kenya</Text>}
       </View>
 
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+      >
         {MODULES.map((module) => {
           const isActive = module.key === activeRoute;
           return (
