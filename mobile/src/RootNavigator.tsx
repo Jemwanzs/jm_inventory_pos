@@ -2,8 +2,8 @@ import React from "react";
 import { ActivityIndicator, View } from "react-native";
 
 import { useAuth } from "./auth/AuthContext";
+import AppShell from "./navigation/AppShell";
 import ChangePasswordScreen from "./screens/ChangePasswordScreen";
-import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 
 export default function RootNavigator() {
@@ -25,5 +25,5 @@ export default function RootNavigator() {
     return <ChangePasswordScreen />;
   }
 
-  return <HomeScreen />;
+  return <AppShell />;
 }

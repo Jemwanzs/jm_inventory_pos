@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -12,6 +11,8 @@ import {
 
 import { ApiError, changePassword } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
+import { Button } from "../components/Button";
+import { colors, radii, spacing, typography } from "../theme";
 
 export default function ChangePasswordScreen() {
   const { token, completePasswordChange, signOut } = useAuth();
@@ -61,6 +62,7 @@ export default function ChangePasswordScreen() {
         <TextInput
           style={styles.input}
           placeholder="Current (temporary) password"
+          placeholderTextColor={colors.text.muted}
           secureTextEntry
           value={currentPassword}
           onChangeText={setCurrentPassword}
@@ -68,6 +70,7 @@ export default function ChangePasswordScreen() {
         <TextInput
           style={styles.input}
           placeholder="New password (min. 8 characters)"
+          placeholderTextColor={colors.text.muted}
           secureTextEntry
           value={newPassword}
           onChangeText={setNewPassword}
@@ -75,6 +78,7 @@ export default function ChangePasswordScreen() {
         <TextInput
           style={styles.input}
           placeholder="Confirm new password"
+          placeholderTextColor={colors.text.muted}
           secureTextEntry
           value={confirmPassword}
           onChangeText={setConfirmPassword}
@@ -82,17 +86,12 @@ export default function ChangePasswordScreen() {
 
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
-        <TouchableOpacity
-          style={[styles.button, !canSubmit && styles.buttonDisabled]}
+        <Button
+          label="Update Password"
           onPress={handleSubmit}
           disabled={!canSubmit}
-        >
-          {isSubmitting ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Update Password</Text>
-          )}
-        </TouchableOpacity>
+          loading={isSubmitting}
+        />
 
         <TouchableOpacity style={styles.linkButton} onPress={signOut}>
           <Text style={styles.linkText}>Sign out</Text>
@@ -105,63 +104,50 @@ export default function ChangePasswordScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0f172a",
+    backgroundColor: colors.brand.darkBrown,
     justifyContent: "center",
   },
   form: {
-    marginHorizontal: 24,
-    backgroundColor: "#ffffff",
-    borderRadius: 16,
-    padding: 24,
+    marginHorizontal: spacing.lg,
+    backgroundColor: colors.surface,
+    borderRadius: radii.lg,
+    padding: spacing.lg,
   },
   title: {
-    fontSize: 22,
+    fontSize: typography.heading.fontSize + 4,
     fontWeight: "700",
-    color: "#0f172a",
+    color: colors.text.primary,
     textAlign: "center",
   },
   subtitle: {
-    fontSize: 14,
-    color: "#64748b",
+    fontSize: typography.body.fontSize,
+    color: colors.text.secondary,
     textAlign: "center",
-    marginTop: 4,
-    marginBottom: 24,
+    marginTop: spacing.xs,
+    marginBottom: spacing.lg,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#cbd5e1",
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
+    borderColor: colors.border,
+    borderRadius: radii.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm + 4,
     fontSize: 16,
-    marginBottom: 12,
+    marginBottom: spacing.sm + 4,
+    color: colors.text.primary,
+    backgroundColor: colors.surfaceAlt,
   },
   error: {
-    color: "#dc2626",
-    marginBottom: 12,
-    fontSize: 14,
-  },
-  button: {
-    backgroundColor: "#0f172a",
-    borderRadius: 10,
-    paddingVertical: 14,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  buttonDisabled: {
-    opacity: 0.5,
-  },
-  buttonText: {
-    color: "#ffffff",
-    fontSize: 16,
-    fontWeight: "600",
+    color: colors.semantic.danger,
+    marginBottom: spacing.sm + 4,
+    fontSize: typography.caption.fontSize,
   },
   linkButton: {
-    marginTop: 16,
+    marginTop: spacing.md,
     alignItems: "center",
   },
   linkText: {
-    color: "#64748b",
-    fontSize: 14,
+    color: colors.text.secondary,
+    fontSize: typography.caption.fontSize,
   },
 });

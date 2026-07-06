@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
 
 import { ApiError, login } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
+import { Button } from "../components/Button";
+import { colors, radii, spacing, typography } from "../theme";
 
 export default function LoginScreen() {
   const { signIn } = useAuth();
@@ -41,12 +41,16 @@ export default function LoginScreen() {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.form}>
+        <View style={styles.brandMark}>
+          <Text style={styles.brandInitial}>J</Text>
+        </View>
         <Text style={styles.title}>Inventory + POS</Text>
         <Text style={styles.subtitle}>Sign in to continue</Text>
 
         <TextInput
           style={styles.input}
           placeholder="Email"
+          placeholderTextColor={colors.text.muted}
           autoCapitalize="none"
           keyboardType="email-address"
           value={email}
@@ -55,6 +59,7 @@ export default function LoginScreen() {
         <TextInput
           style={styles.input}
           placeholder="Password"
+          placeholderTextColor={colors.text.muted}
           secureTextEntry
           value={password}
           onChangeText={setPassword}
@@ -62,17 +67,7 @@ export default function LoginScreen() {
 
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
-        <TouchableOpacity
-          style={[styles.button, !canSubmit && styles.buttonDisabled]}
-          onPress={handleSubmit}
-          disabled={!canSubmit}
-        >
-          {isSubmitting ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Sign In</Text>
-          )}
-        </TouchableOpacity>
+        <Button label="Sign In" onPress={handleSubmit} disabled={!canSubmit} loading={isSubmitting} />
       </View>
     </KeyboardAvoidingView>
   );
@@ -81,55 +76,57 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0f172a",
+    backgroundColor: colors.brand.darkBrown,
     justifyContent: "center",
   },
   form: {
-    marginHorizontal: 24,
-    backgroundColor: "#ffffff",
-    borderRadius: 16,
-    padding: 24,
+    marginHorizontal: spacing.lg,
+    backgroundColor: colors.surface,
+    borderRadius: radii.lg,
+    padding: spacing.lg,
   },
-  title: {
+  brandMark: {
+    alignSelf: "center",
+    width: 56,
+    height: 56,
+    borderRadius: radii.md,
+    backgroundColor: colors.brand.brown,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: spacing.md,
+  },
+  brandInitial: {
+    color: colors.text.inverse,
     fontSize: 24,
     fontWeight: "700",
-    color: "#0f172a",
+  },
+  title: {
+    fontSize: typography.title.fontSize,
+    fontWeight: "700",
+    color: colors.text.primary,
     textAlign: "center",
   },
   subtitle: {
-    fontSize: 14,
-    color: "#64748b",
+    fontSize: typography.body.fontSize,
+    color: colors.text.secondary,
     textAlign: "center",
-    marginTop: 4,
-    marginBottom: 24,
+    marginTop: spacing.xs,
+    marginBottom: spacing.lg,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#cbd5e1",
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
+    borderColor: colors.border,
+    borderRadius: radii.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm + 4,
     fontSize: 16,
-    marginBottom: 12,
+    marginBottom: spacing.sm + 4,
+    color: colors.text.primary,
+    backgroundColor: colors.surfaceAlt,
   },
   error: {
-    color: "#dc2626",
-    marginBottom: 12,
-    fontSize: 14,
-  },
-  button: {
-    backgroundColor: "#0f172a",
-    borderRadius: 10,
-    paddingVertical: 14,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  buttonDisabled: {
-    opacity: 0.5,
-  },
-  buttonText: {
-    color: "#ffffff",
-    fontSize: 16,
-    fontWeight: "600",
+    color: colors.semantic.danger,
+    marginBottom: spacing.sm + 4,
+    fontSize: typography.caption.fontSize,
   },
 });
