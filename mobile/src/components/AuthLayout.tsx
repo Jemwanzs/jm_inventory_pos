@@ -4,6 +4,7 @@ import React from "react";
 import { KeyboardAvoidingView, Platform, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 
 import { colors, radii, spacing, typography } from "../theme";
+import { BrandMark } from "./BrandMark";
 
 const BRAND_FEATURES = [
   { icon: "cube-outline" as const, label: "Track stock across every branch in real time" },
@@ -37,9 +38,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
           end={{ x: 1, y: 1 }}
           style={styles.brandPanel}
         >
-          <View style={styles.brandMarkLarge}>
-            <Text style={styles.brandInitialLarge}>J</Text>
-          </View>
+          <BrandMark size={64} style={styles.brandMarkLarge} />
           <Text style={styles.brandPanelTitle}>JMS Kenya</Text>
           <Text style={styles.brandPanelSubtitle}>Inventory, Stock, Sales & POS — built for every branch.</Text>
 
@@ -95,11 +94,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: spacing.lg,
-  },
-  brandInitialLarge: {
-    color: colors.brand.cream,
-    fontSize: 28,
-    fontWeight: "700",
   },
   brandPanelTitle: {
     color: colors.brand.cream,

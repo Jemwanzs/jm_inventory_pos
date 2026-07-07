@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { useAuth } from "../auth/AuthContext";
+import { BrandMark } from "../components/BrandMark";
 import { colors, radii, spacing, typography } from "../theme";
 import { MODULES } from "./modules";
 
@@ -35,9 +36,7 @@ export function Sidebar({ activeRoute, onNavigate }: SidebarProps) {
   return (
     <View style={[styles.container, { width: collapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH }]}>
       <View style={styles.header}>
-        <View style={styles.brandMark}>
-          <Text style={styles.brandInitial}>J</Text>
-        </View>
+        <BrandMark size={32} />
         {!collapsed && <Text style={styles.brandLabel}>JMS Kenya</Text>}
       </View>
 
@@ -99,19 +98,6 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.lg,
-  },
-  brandMark: {
-    width: 32,
-    height: 32,
-    borderRadius: radii.sm,
-    backgroundColor: colors.brand.brown,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  brandInitial: {
-    color: colors.text.inverse,
-    fontWeight: "700",
-    fontSize: 16,
   },
   brandLabel: {
     color: colors.sidebar.text,

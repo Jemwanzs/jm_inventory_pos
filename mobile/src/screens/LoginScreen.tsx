@@ -5,6 +5,7 @@ import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from "r
 import { ApiError, login } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import { AuthLayout, useIsWideAuthLayout } from "../components/AuthLayout";
+import { BrandMark } from "../components/BrandMark";
 import { Button } from "../components/Button";
 import { colors, radii, spacing, typography } from "../theme";
 
@@ -37,11 +38,7 @@ export default function LoginScreen() {
   return (
     <AuthLayout>
       <View style={styles.form}>
-        {!isWide && (
-          <View style={styles.brandMark}>
-            <Text style={styles.brandInitial}>J</Text>
-          </View>
-        )}
+        {!isWide && <BrandMark size={56} style={styles.brandMark} />}
         <Text style={styles.title}>Welcome back</Text>
         <Text style={styles.subtitle}>Sign in to continue to Inventory + POS</Text>
 
@@ -116,18 +113,7 @@ const styles = StyleSheet.create({
   },
   brandMark: {
     alignSelf: "center",
-    width: 56,
-    height: 56,
-    borderRadius: radii.md,
-    backgroundColor: colors.brand.brown,
-    alignItems: "center",
-    justifyContent: "center",
     marginBottom: spacing.md,
-  },
-  brandInitial: {
-    color: colors.text.inverse,
-    fontSize: 24,
-    fontWeight: "700",
   },
   title: {
     fontSize: typography.title.fontSize,
