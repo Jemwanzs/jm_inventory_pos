@@ -104,7 +104,15 @@ export function acceptInvite(
   });
 }
 
-export type SettingsCategory = "business" | "inventory" | "pos" | "tax" | "notifications" | "security";
+export type SettingsCategory =
+  | "business"
+  | "inventory"
+  | "pos"
+  | "tax"
+  | "notifications"
+  | "security"
+  | "approval"
+  | "templates";
 
 export function getSettings<T extends object>(category: SettingsCategory, token: string): Promise<T> {
   return request<T>(`/settings/${category}`, {}, token);
@@ -189,4 +197,70 @@ export interface AuditLogEntry {
 
 export function listAuditLogs(token: string): Promise<AuditLogEntry[]> {
   return request<AuditLogEntry[]>("/audit-logs", {}, token);
+}
+
+export interface CustomField {
+  id: string;
+  module: string;
+  field_name: string;
+  field_type: string;
+  is_required: boolean;
+  is_active: boolean;
+}
+
+export function listCustomFields(token: string): Promise<CustomField[]> {
+  return request<CustomField[]>("/custom-fields", {}, token);
+}
+
+export function createCustomField(
+  req: { module: string; field_name: string; field_type: string; is_required: boolean },
+  token: string
+): Promise<CustomField> {
+  return request<CustomField>("/custom-fields", { method: "POST", body: JSON.stringify(req) }, token);
+}
+
+export function updateCustomField(
+  id: string,
+  is_active: boolean,
+  token: string
+): Promise<CustomField> {
+  return request<CustomField>(
+    `/custom-fields/${encodeURIComponent(id)}`,
+    { method: "PATCH", body: JSON.stringify({ is_active }) },
+    token
+  );
+}
+
+export interface Role {
+  id: string;
+  name: string;
+  description: string | null;
+}
+
+export interface Permission {
+  id: string;
+  code: string;
+  description: string | null;
+}
+
+export interface RolesMatrix {
+  roles: Role[];
+  permissions: Permission[];
+  assignments: { role_id: string; permission_id: string }[];
+}
+
+export function getRolesMatrix(token: string): Promise<RolesMatrix> {
+  return request<RolesMatrix>("/roles-matrix", {}, token);
+}
+
+export function updateRolePermissions(
+  roleId: string,
+  permissionIds: string[],
+  token: string
+): Promise<void> {
+  return request<void>(
+    `/roles/${encodeURIComponent(roleId)}/permissions`,
+    { method: "PUT", body: JSON.stringify({ permission_ids: permissionIds }) },
+    token
+  );
 }

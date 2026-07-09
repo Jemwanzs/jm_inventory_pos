@@ -1,8 +1,10 @@
 mod audit_logs;
 mod auth;
+mod custom_fields;
 mod health;
 mod invites;
 mod numbering;
+mod roles;
 mod settings;
 mod workspaces;
 
@@ -42,4 +44,17 @@ pub fn router() -> Router<AppState> {
             axum::routing::patch(workspaces::update_workspace),
         )
         .route("/api/audit-logs", get(audit_logs::list_audit_logs))
+        .route(
+            "/api/custom-fields",
+            get(custom_fields::list_custom_fields).post(custom_fields::create_custom_field),
+        )
+        .route(
+            "/api/custom-fields/{id}",
+            axum::routing::patch(custom_fields::update_custom_field),
+        )
+        .route("/api/roles-matrix", get(roles::get_roles_matrix))
+        .route(
+            "/api/roles/{role_id}/permissions",
+            axum::routing::put(roles::update_role_permissions),
+        )
 }

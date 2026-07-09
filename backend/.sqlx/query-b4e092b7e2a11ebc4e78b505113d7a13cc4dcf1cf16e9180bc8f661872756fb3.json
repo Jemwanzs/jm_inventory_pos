@@ -1,0 +1,52 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT id, module, field_name, field_type, is_required, is_active\n        FROM custom_fields\n        WHERE tenant_id = $1\n        ORDER BY module, field_name\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "module",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "field_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "field_type",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "is_required",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 5,
+        "name": "is_active",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "b4e092b7e2a11ebc4e78b505113d7a13cc4dcf1cf16e9180bc8f661872756fb3"
+}

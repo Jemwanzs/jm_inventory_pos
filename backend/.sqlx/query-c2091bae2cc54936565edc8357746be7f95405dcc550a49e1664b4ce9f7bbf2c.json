@@ -1,0 +1,54 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        UPDATE custom_fields\n        SET is_active = $3\n        WHERE id = $1 AND tenant_id = $2\n        RETURNING id, module, field_name, field_type, is_required, is_active\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "module",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "field_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "field_type",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "is_required",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 5,
+        "name": "is_active",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Bool"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "c2091bae2cc54936565edc8357746be7f95405dcc550a49e1664b4ce9f7bbf2c"
+}

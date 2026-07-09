@@ -6,7 +6,16 @@ use serde_json::Value;
 
 use crate::{audit, auth::extractor::AuthUser, error::AppError, state::AppState, tenant::resolve_tenant_id};
 
-const VALID_CATEGORIES: &[&str] = &["business", "inventory", "pos", "tax", "notifications", "security"];
+const VALID_CATEGORIES: &[&str] = &[
+    "business",
+    "inventory",
+    "pos",
+    "tax",
+    "notifications",
+    "security",
+    "approval",
+    "templates",
+];
 
 fn validate_category(category: &str) -> Result<(), AppError> {
     if VALID_CATEGORIES.contains(&category) {

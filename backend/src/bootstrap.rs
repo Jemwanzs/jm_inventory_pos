@@ -68,13 +68,13 @@ pub async fn ensure_super_admin(pool: &PgPool, email: &str) -> anyhow::Result<()
 /// Settings has something real to configure before tenant creation
 /// (Administration → Tenants) is built. Platform-level users (tenant_id
 /// NULL) manage this tenant's settings via `tenant::resolve_tenant_id`.
-pub async fn ensure_default_tenant(pool: &PgPool) -> anyhow::Result<()> {
-    let existing: Option<(uuid::Uuid,)> = sqlx::query_as("SELECT id FROM tenants LIMIT 1")
+/// Returns the tenant id either way, for `ensure_default_roles`.
+pub async fn ensure_default_tenant(pool: &PgPool) -> anyhow::Result<uuid::Uuid> {
+    if let Some((id,)) = sqlx::query_as::<_, (uuid::Uuid,)>("SELECT id FROM tenants LIMIT 1")
         .fetch_optional(pool)
-        .await?;
-
-    if existing.is_some() {
-        return Ok(());
+        .await?
+    {
+        return Ok(id);
     }
 
     let (tenant_id,): (uuid::Uuid,) =
@@ -83,6 +83,36 @@ pub async fn ensure_default_tenant(pool: &PgPool) -> anyhow::Result<()> {
             .await?;
 
     tracing::info!(%tenant_id, "Created default tenant 'My Business' for initial settings.");
+
+    Ok(tenant_id)
+}
+
+/// Seeds a starter set of tenant-scoped roles so the Roles & Permissions
+/// matrix has something real to show before a tenant admin creates their
+/// own. Idempotent — only inserts roles that don't already exist by name
+/// for this tenant.
+pub async fn ensure_default_roles(pool: &PgPool, tenant_id: uuid::Uuid) -> anyhow::Result<()> {
+    const STARTER_ROLES: &[(&str, &str)] = &[
+        ("Tenant Admin", "Full access within this business"),
+        ("Branch Manager", "Manages a single branch's operations"),
+        ("Cashier", "Runs the POS and records sales"),
+        ("Viewer", "Read-only access"),
+    ];
+
+    for (name, description) in STARTER_ROLES {
+        sqlx::query(
+            r#"
+            INSERT INTO roles (tenant_id, name, description)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (tenant_id, name) DO NOTHING
+            "#,
+        )
+        .bind(tenant_id)
+        .bind(name)
+        .bind(description)
+        .execute(pool)
+        .await?;
+    }
 
     Ok(())
 }

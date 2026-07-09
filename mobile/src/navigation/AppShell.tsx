@@ -7,14 +7,18 @@ import DashboardScreen from "../screens/DashboardScreen";
 import InviteUserScreen from "../screens/InviteUserScreen";
 import MoreMenuScreen from "../screens/MoreMenuScreen";
 import PlaceholderScreen from "../screens/PlaceholderScreen";
+import ApprovalSettingsScreen from "../screens/settings/ApprovalSettingsScreen";
 import AuditLogsScreen from "../screens/settings/AuditLogsScreen";
 import BusinessProfileScreen from "../screens/settings/BusinessProfileScreen";
+import CustomFieldsScreen from "../screens/settings/CustomFieldsScreen";
 import InventorySettingsScreen from "../screens/settings/InventorySettingsScreen";
 import NotificationSettingsScreen from "../screens/settings/NotificationSettingsScreen";
 import NumberingSettingsScreen from "../screens/settings/NumberingSettingsScreen";
 import POSSettingsScreen from "../screens/settings/POSSettingsScreen";
+import RolesPermissionsScreen from "../screens/settings/RolesPermissionsScreen";
 import SecuritySettingsScreen from "../screens/settings/SecuritySettingsScreen";
 import TaxSettingsScreen from "../screens/settings/TaxSettingsScreen";
+import TemplatesScreen from "../screens/settings/TemplatesScreen";
 import WorkspacesScreen from "../screens/settings/WorkspacesScreen";
 import { colors } from "../theme";
 import { BottomNav } from "./BottomNav";
@@ -40,6 +44,10 @@ const REAL_SCREENS: Record<string, React.ComponentType<any>> = {
   "Settings.Notifications": NotificationSettingsScreen,
   "Settings.Security": SecuritySettingsScreen,
   "Settings.AuditLogs": AuditLogsScreen,
+  "Settings.Approvals": ApprovalSettingsScreen,
+  "Settings.Templates": TemplatesScreen,
+  "Settings.CustomFields": CustomFieldsScreen,
+  "Settings.Roles": RolesPermissionsScreen,
 };
 
 export default function AppShell() {
