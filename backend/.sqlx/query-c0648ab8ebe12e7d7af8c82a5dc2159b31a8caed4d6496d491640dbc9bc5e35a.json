@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE products SET is_active = $3, updated_at = now() WHERE id = $1 AND tenant_id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Bool"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "c0648ab8ebe12e7d7af8c82a5dc2159b31a8caed4d6496d491640dbc9bc5e35a"
+}

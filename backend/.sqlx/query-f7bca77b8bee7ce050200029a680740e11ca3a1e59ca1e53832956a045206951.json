@@ -1,0 +1,76 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            p.id, p.name, p.sku, p.barcode,\n            c.name AS \"category_name?\",\n            b.name AS \"brand_name?\",\n            u.abbreviation AS \"unit_abbreviation?\",\n            p.cost_price, p.selling_price, p.is_active\n        FROM products p\n        LEFT JOIN product_categories c ON c.id = p.category_id\n        LEFT JOIN product_brands b ON b.id = p.brand_id\n        LEFT JOIN units_of_measure u ON u.id = p.unit_id\n        WHERE p.tenant_id = $1\n        ORDER BY p.name\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "sku",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "barcode",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "category_name?",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "brand_name?",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "unit_abbreviation?",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "cost_price",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 8,
+        "name": "selling_price",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 9,
+        "name": "is_active",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "f7bca77b8bee7ce050200029a680740e11ca3a1e59ca1e53832956a045206951"
+}

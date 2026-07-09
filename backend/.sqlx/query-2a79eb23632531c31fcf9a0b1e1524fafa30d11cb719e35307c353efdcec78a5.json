@@ -1,0 +1,42 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO units_of_measure (tenant_id, name, abbreviation)\n        VALUES ($1, $2, $3)\n        RETURNING id, name, abbreviation, is_active\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "abbreviation",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "is_active",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "2a79eb23632531c31fcf9a0b1e1524fafa30d11cb719e35307c353efdcec78a5"
+}

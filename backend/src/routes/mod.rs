@@ -1,9 +1,11 @@
 mod audit_logs;
 mod auth;
+mod catalog;
 mod custom_fields;
 mod health;
 mod invites;
 mod numbering;
+mod products;
 mod roles;
 mod settings;
 mod workspaces;
@@ -56,5 +58,25 @@ pub fn router() -> Router<AppState> {
         .route(
             "/api/roles/{role_id}/permissions",
             axum::routing::put(roles::update_role_permissions),
+        )
+        .route(
+            "/api/products",
+            get(products::list_products).post(products::create_product),
+        )
+        .route(
+            "/api/products/{id}",
+            axum::routing::patch(products::update_product),
+        )
+        .route(
+            "/api/product-categories",
+            get(catalog::list_categories).post(catalog::create_category),
+        )
+        .route(
+            "/api/product-brands",
+            get(catalog::list_brands).post(catalog::create_brand),
+        )
+        .route(
+            "/api/units-of-measure",
+            get(catalog::list_units).post(catalog::create_unit),
         )
 }

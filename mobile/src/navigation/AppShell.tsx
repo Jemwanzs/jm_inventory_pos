@@ -7,6 +7,11 @@ import DashboardScreen from "../screens/DashboardScreen";
 import InviteUserScreen from "../screens/InviteUserScreen";
 import MoreMenuScreen from "../screens/MoreMenuScreen";
 import PlaceholderScreen from "../screens/PlaceholderScreen";
+import AddProductScreen from "../screens/products/AddProductScreen";
+import BrandsScreen from "../screens/products/BrandsScreen";
+import CategoriesScreen from "../screens/products/CategoriesScreen";
+import ProductListScreen from "../screens/products/ProductListScreen";
+import UnitsScreen from "../screens/products/UnitsScreen";
 import ApprovalSettingsScreen from "../screens/settings/ApprovalSettingsScreen";
 import AuditLogsScreen from "../screens/settings/AuditLogsScreen";
 import BusinessProfileScreen from "../screens/settings/BusinessProfileScreen";
@@ -48,6 +53,11 @@ const REAL_SCREENS: Record<string, React.ComponentType<any>> = {
   "Settings.Templates": TemplatesScreen,
   "Settings.CustomFields": CustomFieldsScreen,
   "Settings.Roles": RolesPermissionsScreen,
+  "Products.List": ProductListScreen,
+  "Products.Add": AddProductScreen,
+  "Products.Categories": CategoriesScreen,
+  "Products.Brands": BrandsScreen,
+  "Products.Units": UnitsScreen,
 };
 
 export default function AppShell() {

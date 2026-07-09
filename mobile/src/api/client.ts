@@ -264,3 +264,82 @@ export function updateRolePermissions(
     token
   );
 }
+
+export interface CatalogItem {
+  id: string;
+  name: string;
+  is_active: boolean;
+}
+
+export interface UnitItem extends CatalogItem {
+  abbreviation: string;
+}
+
+export function listCategories(token: string): Promise<CatalogItem[]> {
+  return request<CatalogItem[]>("/product-categories", {}, token);
+}
+
+export function createCategory(name: string, token: string): Promise<CatalogItem> {
+  return request<CatalogItem>("/product-categories", { method: "POST", body: JSON.stringify({ name }) }, token);
+}
+
+export function listBrands(token: string): Promise<CatalogItem[]> {
+  return request<CatalogItem[]>("/product-brands", {}, token);
+}
+
+export function createBrand(name: string, token: string): Promise<CatalogItem> {
+  return request<CatalogItem>("/product-brands", { method: "POST", body: JSON.stringify({ name }) }, token);
+}
+
+export function listUnits(token: string): Promise<UnitItem[]> {
+  return request<UnitItem[]>("/units-of-measure", {}, token);
+}
+
+export function createUnit(name: string, abbreviation: string, token: string): Promise<UnitItem> {
+  return request<UnitItem>(
+    "/units-of-measure",
+    { method: "POST", body: JSON.stringify({ name, abbreviation }) },
+    token
+  );
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  sku: string | null;
+  barcode: string | null;
+  category_name: string | null;
+  brand_name: string | null;
+  unit_abbreviation: string | null;
+  cost_price: string;
+  selling_price: string;
+  is_active: boolean;
+}
+
+export function listProducts(token: string): Promise<Product[]> {
+  return request<Product[]>("/products", {}, token);
+}
+
+export interface CreateProductRequest {
+  name: string;
+  sku?: string;
+  barcode?: string;
+  category_id?: string;
+  brand_id?: string;
+  unit_id?: string;
+  description?: string;
+  cost_price: string;
+  selling_price: string;
+}
+
+export function createProduct(req: CreateProductRequest, token: string): Promise<Product> {
+  return request<Product>("/products", { method: "POST", body: JSON.stringify(req) }, token);
+}
+
+export function updateProductActive(id: string, is_active: boolean, token: string): Promise<void> {
+  return request<void>(
+    `/products/${encodeURIComponent(id)}`,
+    { method: "PATCH", body: JSON.stringify({ is_active }) },
+    token
+  );
+}
