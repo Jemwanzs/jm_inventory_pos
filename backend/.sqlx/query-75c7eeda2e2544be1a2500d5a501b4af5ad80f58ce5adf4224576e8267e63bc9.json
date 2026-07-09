@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                INSERT INTO numbering_sequences (tenant_id, document_type)\n                VALUES ($1, $2)\n                ON CONFLICT (tenant_id, document_type) DO NOTHING\n                ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "75c7eeda2e2544be1a2500d5a501b4af5ad80f58ce5adf4224576e8267e63bc9"
+}

@@ -1,6 +1,10 @@
+mod audit_logs;
 mod auth;
 mod health;
 mod invites;
+mod numbering;
+mod settings;
+mod workspaces;
 
 use axum::{
     routing::{get, post},
@@ -17,4 +21,25 @@ pub fn router() -> Router<AppState> {
         .route("/api/invites", post(invites::create_invite))
         .route("/api/invites/{token}", get(invites::get_invite))
         .route("/api/invites/{token}/accept", post(invites::accept_invite))
+        .route(
+            "/api/settings/numbering",
+            get(numbering::list_numbering),
+        )
+        .route(
+            "/api/settings/numbering/{document_type}",
+            axum::routing::put(numbering::update_numbering),
+        )
+        .route(
+            "/api/settings/{category}",
+            get(settings::get_settings).put(settings::put_settings),
+        )
+        .route(
+            "/api/workspaces",
+            get(workspaces::list_workspaces).post(workspaces::create_workspace),
+        )
+        .route(
+            "/api/workspaces/{id}",
+            axum::routing::patch(workspaces::update_workspace),
+        )
+        .route("/api/audit-logs", get(audit_logs::list_audit_logs))
 }

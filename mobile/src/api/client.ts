@@ -103,3 +103,90 @@ export function acceptInvite(
     body: JSON.stringify({ name, password }),
   });
 }
+
+export type SettingsCategory = "business" | "inventory" | "pos" | "tax" | "notifications" | "security";
+
+export function getSettings<T extends object>(category: SettingsCategory, token: string): Promise<T> {
+  return request<T>(`/settings/${category}`, {}, token);
+}
+
+export function putSettings<T extends object>(
+  category: SettingsCategory,
+  data: T,
+  token: string
+): Promise<T> {
+  return request<T>(
+    `/settings/${category}`,
+    { method: "PUT", body: JSON.stringify(data) },
+    token
+  );
+}
+
+export interface Workspace {
+  id: string;
+  name: string;
+  type: string;
+  is_active: boolean;
+}
+
+export function listWorkspaces(token: string): Promise<Workspace[]> {
+  return request<Workspace[]>("/workspaces", {}, token);
+}
+
+export function createWorkspace(name: string, type: string, token: string): Promise<Workspace> {
+  return request<Workspace>(
+    "/workspaces",
+    { method: "POST", body: JSON.stringify({ name, type }) },
+    token
+  );
+}
+
+export function updateWorkspace(
+  id: string,
+  patch: Partial<Pick<Workspace, "name" | "type" | "is_active">>,
+  token: string
+): Promise<Workspace> {
+  return request<Workspace>(
+    `/workspaces/${encodeURIComponent(id)}`,
+    { method: "PATCH", body: JSON.stringify(patch) },
+    token
+  );
+}
+
+export interface NumberingSequence {
+  document_type: string;
+  prefix: string;
+  include_year: boolean;
+  include_month: boolean;
+  sequence_length: number;
+  separator: string;
+  next_number: number;
+}
+
+export function listNumbering(token: string): Promise<NumberingSequence[]> {
+  return request<NumberingSequence[]>("/settings/numbering", {}, token);
+}
+
+export function updateNumbering(
+  documentType: string,
+  patch: Pick<NumberingSequence, "prefix" | "include_year" | "include_month" | "sequence_length" | "separator">,
+  token: string
+): Promise<NumberingSequence> {
+  return request<NumberingSequence>(
+    `/settings/numbering/${encodeURIComponent(documentType)}`,
+    { method: "PUT", body: JSON.stringify(patch) },
+    token
+  );
+}
+
+export interface AuditLogEntry {
+  id: string;
+  action: string;
+  module: string;
+  user_email: string | null;
+  created_at: string;
+}
+
+export function listAuditLogs(token: string): Promise<AuditLogEntry[]> {
+  return request<AuditLogEntry[]>("/audit-logs", {}, token);
+}

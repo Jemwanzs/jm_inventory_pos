@@ -63,3 +63,26 @@ pub async fn ensure_super_admin(pool: &PgPool, email: &str) -> anyhow::Result<()
 
     Ok(())
 }
+
+/// Creates a single default tenant on first startup if none exists, so
+/// Settings has something real to configure before tenant creation
+/// (Administration → Tenants) is built. Platform-level users (tenant_id
+/// NULL) manage this tenant's settings via `tenant::resolve_tenant_id`.
+pub async fn ensure_default_tenant(pool: &PgPool) -> anyhow::Result<()> {
+    let existing: Option<(uuid::Uuid,)> = sqlx::query_as("SELECT id FROM tenants LIMIT 1")
+        .fetch_optional(pool)
+        .await?;
+
+    if existing.is_some() {
+        return Ok(());
+    }
+
+    let (tenant_id,): (uuid::Uuid,) =
+        sqlx::query_as("INSERT INTO tenants (name) VALUES ('My Business') RETURNING id")
+            .fetch_one(pool)
+            .await?;
+
+    tracing::info!(%tenant_id, "Created default tenant 'My Business' for initial settings.");
+
+    Ok(())
+}

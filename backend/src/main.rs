@@ -6,6 +6,7 @@ mod email;
 mod error;
 mod routes;
 mod state;
+mod tenant;
 
 use std::sync::Arc;
 
@@ -34,6 +35,7 @@ async fn main() -> anyhow::Result<()> {
     sqlx::migrate!("./migrations").run(&db).await?;
 
     bootstrap::ensure_super_admin(&db, &config.super_admin_email).await?;
+    bootstrap::ensure_default_tenant(&db).await?;
 
     let email = EmailClient::new(config.resend_api_key.clone(), config.email_from.clone());
 
