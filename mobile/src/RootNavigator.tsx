@@ -1,10 +1,10 @@
 import React from "react";
 import { ActivityIndicator, View } from "react-native";
 
+import AuthGate from "./AuthGate";
 import { useAuth } from "./auth/AuthContext";
 import AppShell from "./navigation/AppShell";
 import ChangePasswordScreen from "./screens/ChangePasswordScreen";
-import LoginScreen from "./screens/LoginScreen";
 
 export default function RootNavigator() {
   const { isLoading, token, mustChangePassword } = useAuth();
@@ -18,7 +18,7 @@ export default function RootNavigator() {
   }
 
   if (!token) {
-    return <LoginScreen />;
+    return <AuthGate />;
   }
 
   if (mustChangePassword) {

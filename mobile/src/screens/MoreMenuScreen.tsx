@@ -1,37 +1,68 @@
 import { Ionicons } from "@expo/vector-icons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React from "react";
+import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { useAuth } from "../auth/AuthContext";
-import { MORE_MODULES } from "../navigation/modules";
+import { MODULE_TREE } from "../navigation/screenTree";
 import type { RootStackParamList } from "../navigation/types";
 import { colors, radii, spacing, typography } from "../theme";
 
 export default function MoreMenuScreen({ navigation }: NativeStackScreenProps<RootStackParamList, string>) {
   const { signOut } = useAuth();
+  const [expanded, setExpanded] = useState<string | null>(null);
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.heading}>More</Text>
+      <Text style={styles.subheading}>Every module and screen in the platform.</Text>
 
       <View style={styles.list}>
-        {MORE_MODULES.map((module) => (
-          <TouchableOpacity
-            key={module.key}
-            style={styles.item}
-            onPress={() => navigation.navigate(module.key)}
-          >
-            <View style={styles.itemIcon}>
-              <Ionicons name={module.icon} size={20} color={colors.brand.brown} />
+        {MODULE_TREE.map((module) => {
+          const isExpanded = expanded === module.key;
+          return (
+            <View key={module.key}>
+              <TouchableOpacity
+                style={styles.item}
+                onPress={() => setExpanded((prev) => (prev === module.key ? null : module.key))}
+              >
+                <View style={styles.itemIcon}>
+                  <Ionicons name={module.icon} size={20} color={colors.brand.brown} />
+                </View>
+                <View style={styles.itemText}>
+                  <Text style={styles.itemLabel}>{module.label}</Text>
+                  <Text style={styles.itemDescription}>{module.description}</Text>
+                </View>
+                <Ionicons
+                  name={isExpanded ? "chevron-down-outline" : "chevron-forward-outline"}
+                  size={18}
+                  color={colors.text.muted}
+                />
+              </TouchableOpacity>
+
+              {isExpanded && (
+                <View style={styles.subList}>
+                  {module.screens.map((item) =>
+                    item.isGroupLabel ? (
+                      <Text key={item.key} style={styles.groupLabel}>
+                        {item.label}
+                      </Text>
+                    ) : (
+                      <TouchableOpacity
+                        key={item.key}
+                        style={styles.subItem}
+                        onPress={() => navigation.navigate(item.key)}
+                      >
+                        <Text style={styles.subItemLabel}>{item.label}</Text>
+                        <Ionicons name="chevron-forward-outline" size={14} color={colors.text.muted} />
+                      </TouchableOpacity>
+                    )
+                  )}
+                </View>
+              )}
             </View>
-            <View style={styles.itemText}>
-              <Text style={styles.itemLabel}>{module.label}</Text>
-              <Text style={styles.itemDescription}>{module.description}</Text>
-            </View>
-            <Ionicons name="chevron-forward-outline" size={18} color={colors.text.muted} />
-          </TouchableOpacity>
-        ))}
+          );
+        })}
 
         <TouchableOpacity style={styles.item} onPress={signOut}>
           <View style={styles.itemIcon}>
@@ -59,6 +90,11 @@ const styles = StyleSheet.create({
     fontSize: typography.title.fontSize,
     fontWeight: "700",
     color: colors.text.primary,
+  },
+  subheading: {
+    fontSize: typography.body.fontSize,
+    color: colors.text.secondary,
+    marginTop: -spacing.sm,
   },
   list: {
     backgroundColor: colors.surface,
@@ -96,5 +132,33 @@ const styles = StyleSheet.create({
     fontSize: typography.caption.fontSize,
     color: colors.text.secondary,
     marginTop: 1,
+  },
+  subList: {
+    backgroundColor: colors.background,
+    paddingVertical: spacing.xs,
+  },
+  subItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: spacing.sm,
+    paddingLeft: spacing.xl + spacing.md,
+    paddingRight: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  subItemLabel: {
+    fontSize: typography.body.fontSize - 1,
+    color: colors.text.primary,
+  },
+  groupLabel: {
+    color: colors.text.muted,
+    fontSize: typography.label.fontSize - 2,
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    paddingLeft: spacing.xl + spacing.md,
+    paddingTop: spacing.sm + 2,
+    paddingBottom: spacing.xs,
   },
 });

@@ -67,3 +67,39 @@ export function changePassword(
     token
   );
 }
+
+export interface CreateInviteResponse {
+  invite_link: string;
+}
+
+export function createInvite(email: string, authToken: string): Promise<CreateInviteResponse> {
+  return request<CreateInviteResponse>(
+    "/invites",
+    { method: "POST", body: JSON.stringify({ email }) },
+    authToken
+  );
+}
+
+export interface InviteInfoResponse {
+  email: string;
+}
+
+export function getInvite(inviteToken: string): Promise<InviteInfoResponse> {
+  return request<InviteInfoResponse>(`/invites/${encodeURIComponent(inviteToken)}`);
+}
+
+export interface AcceptInviteResponse {
+  token: string;
+  must_change_password: boolean;
+}
+
+export function acceptInvite(
+  inviteToken: string,
+  name: string,
+  password: string
+): Promise<AcceptInviteResponse> {
+  return request<AcceptInviteResponse>(`/invites/${encodeURIComponent(inviteToken)}/accept`, {
+    method: "POST",
+    body: JSON.stringify({ name, password }),
+  });
+}

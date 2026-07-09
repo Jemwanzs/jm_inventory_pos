@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { colors, spacing, typography } from "../theme";
-import { MOBILE_PRIMARY_MODULES } from "./modules";
+import { defaultScreenFor, findScreen, MODULE_TREE, MOBILE_PRIMARY_KEYS } from "./screenTree";
 
 interface BottomNavProps {
   activeRoute: string;
@@ -13,16 +13,24 @@ interface BottomNavProps {
 
 const MORE_KEY = "More";
 
+const PRIMARY_MODULES = MODULE_TREE.filter((m) => (MOBILE_PRIMARY_KEYS as readonly string[]).includes(m.key));
+
 export function BottomNav({ activeRoute, onNavigate }: BottomNavProps) {
   const insets = useSafeAreaInsets();
-  const isMoreActive = !MOBILE_PRIMARY_MODULES.some((m) => m.key === activeRoute) && activeRoute !== "Dashboard" && activeRoute !== "POS" && activeRoute !== "Inventory" && activeRoute !== "Reports";
+  const activeModuleKey = findScreen(activeRoute)?.module.key ?? (activeRoute === "Dashboard" ? "Dashboard" : null);
+  const isMoreActive = !PRIMARY_MODULES.some((m) => m.key === activeModuleKey);
+
+  const goToModule = (moduleKey: string) => {
+    const target = defaultScreenFor(moduleKey);
+    if (target) onNavigate(target.key);
+  };
 
   return (
     <View style={[styles.container, { paddingBottom: Math.max(insets.bottom, spacing.sm) }]}>
-      {MOBILE_PRIMARY_MODULES.map((module) => {
-        const isActive = module.key === activeRoute;
+      {PRIMARY_MODULES.map((module) => {
+        const isActive = module.key === activeModuleKey;
         return (
-          <TouchableOpacity key={module.key} style={styles.item} onPress={() => onNavigate(module.key)}>
+          <TouchableOpacity key={module.key} style={styles.item} onPress={() => goToModule(module.key)}>
             <Ionicons
               name={module.icon}
               size={22}

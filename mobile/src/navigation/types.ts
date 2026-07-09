@@ -4,6 +4,7 @@ export interface PlaceholderParams {
   label: string;
   icon: keyof typeof Ionicons.glyphMap;
   description: string;
+  tabs?: string[];
 }
 
 // Loosely typed on purpose: each placeholder module screen shares the same

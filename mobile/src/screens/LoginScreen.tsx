@@ -1,21 +1,25 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { ApiError, login } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import { AuthLayout, useIsWideAuthLayout } from "../components/AuthLayout";
 import { BrandMark } from "../components/BrandMark";
 import { Button } from "../components/Button";
+import { TextField } from "../components/TextField";
 import { colors, radii, spacing, typography } from "../theme";
 
-export default function LoginScreen() {
+interface LoginScreenProps {
+  onGoToSignUp: () => void;
+}
+
+export default function LoginScreen({ onGoToSignUp }: LoginScreenProps) {
   const { signIn } = useAuth();
   const isWide = useIsWideAuthLayout();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [focusedField, setFocusedField] = useState<"email" | "password" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showForgotNote, setShowForgotNote] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,29 +46,21 @@ export default function LoginScreen() {
         <Text style={styles.title}>Welcome back</Text>
         <Text style={styles.subtitle}>Sign in to continue to Inventory + POS</Text>
 
-        <Text style={styles.label}>Email</Text>
-        <TextInput
-          style={[styles.input, focusedField === "email" && styles.inputFocused]}
+        <TextField
+          label="Email"
           placeholder="you@business.com"
-          placeholderTextColor={colors.text.muted}
           autoCapitalize="none"
           keyboardType="email-address"
           value={email}
           onChangeText={setEmail}
-          onFocus={() => setFocusedField("email")}
-          onBlur={() => setFocusedField(null)}
         />
 
-        <Text style={styles.label}>Password</Text>
-        <TextInput
-          style={[styles.input, focusedField === "password" && styles.inputFocused]}
+        <TextField
+          label="Password"
           placeholder="••••••••"
-          placeholderTextColor={colors.text.muted}
-          secureTextEntry
+          isPassword
           value={password}
           onChangeText={setPassword}
-          onFocus={() => setFocusedField("password")}
-          onBlur={() => setFocusedField(null)}
         />
 
         <TouchableOpacity style={styles.forgotLink} onPress={() => setShowForgotNote((prev) => !prev)}>
@@ -84,6 +80,13 @@ export default function LoginScreen() {
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
         <Button label="Sign In" onPress={handleSubmit} disabled={!canSubmit} loading={isSubmitting} />
+
+        <View style={styles.signUpRow}>
+          <Text style={styles.footnote}>Have an invite code?</Text>
+          <TouchableOpacity onPress={onGoToSignUp}>
+            <Text style={styles.signUpLink}> Create your account</Text>
+          </TouchableOpacity>
+        </View>
 
         <Text style={styles.footnote}>
           Accounts are created by your business administrator — there's no public sign-up.
@@ -128,27 +131,6 @@ const styles = StyleSheet.create({
     marginTop: spacing.xs,
     marginBottom: spacing.lg,
   },
-  label: {
-    fontSize: typography.label.fontSize,
-    fontWeight: "600",
-    color: colors.text.secondary,
-    marginBottom: spacing.xs,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm + 4,
-    fontSize: 16,
-    marginBottom: spacing.md,
-    color: colors.text.primary,
-    backgroundColor: colors.surfaceAlt,
-  },
-  inputFocused: {
-    borderColor: colors.brand.brown,
-    backgroundColor: colors.surface,
-  },
   forgotLink: {
     alignSelf: "flex-end",
     marginBottom: spacing.md,
@@ -178,8 +160,18 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm + 4,
     fontSize: typography.caption.fontSize,
   },
-  footnote: {
+  signUpRow: {
+    flexDirection: "row",
+    justifyContent: "center",
     marginTop: spacing.lg,
+    flexWrap: "wrap",
+  },
+  signUpLink: {
+    color: colors.brand.brown,
+    fontSize: typography.caption.fontSize - 1,
+    fontWeight: "700",
+  },
+  footnote: {
     color: colors.text.muted,
     fontSize: typography.caption.fontSize - 1,
     textAlign: "center",
