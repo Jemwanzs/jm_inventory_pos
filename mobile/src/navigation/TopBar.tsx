@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import { colors, spacing, typography } from "../theme";
-import { findScreen } from "./screenTree";
+import { allScreens, findScreen } from "./screenTree";
 
 interface TopBarProps {
   activeRoute: string;
@@ -11,11 +11,17 @@ interface TopBarProps {
 export function TopBar({ activeRoute }: TopBarProps) {
   const found = findScreen(activeRoute);
   const label = found ? found.screen.label : activeRoute === "More" ? "More" : activeRoute;
-  const moduleLabel = found && found.module.screens.filter((s) => !s.isGroupLabel).length > 1 ? found.module.label : null;
+  const isSingleScreenModule = found && allScreens(found.module).length <= 1;
+  const breadcrumb =
+    found && !isSingleScreenModule
+      ? [found.module.label, found.bundle.key !== "_single" ? found.bundle.label : null]
+          .filter(Boolean)
+          .join(" · ")
+      : null;
 
   return (
     <View style={styles.container}>
-      {moduleLabel && <Text style={styles.breadcrumb}>{moduleLabel}</Text>}
+      {breadcrumb && <Text style={styles.breadcrumb}>{breadcrumb}</Text>}
       <Text style={styles.title}>{label}</Text>
     </View>
   );

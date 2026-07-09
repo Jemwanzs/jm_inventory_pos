@@ -21,6 +21,7 @@ export function Sidebar({ activeRoute, onNavigate }: SidebarProps) {
   const { signOut } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [expandedModule, setExpandedModule] = useState<string | null>(() => findScreen(activeRoute)?.module.key ?? "Dashboard");
+  const [expandedBundle, setExpandedBundle] = useState<string | null>(() => findScreen(activeRoute)?.bundle.key ?? null);
 
   useEffect(() => {
     AsyncStorage.getItem(COLLAPSE_PREFERENCE_KEY).then((value) => {
@@ -28,11 +29,15 @@ export function Sidebar({ activeRoute, onNavigate }: SidebarProps) {
     });
   }, []);
 
-  // Only one module's submenu expands at a time (docs/ui-ux.md Desktop Layout)
-  // — keep it in sync with whatever screen navigation lands on.
+  // Only one module's submenu — and within it, only one bundle — expands
+  // at a time (docs/ui-ux.md Desktop Layout), kept in sync with whatever
+  // screen navigation lands on.
   useEffect(() => {
-    const owner = findScreen(activeRoute)?.module.key;
-    if (owner) setExpandedModule(owner);
+    const found = findScreen(activeRoute);
+    if (found) {
+      setExpandedModule(found.module.key);
+      setExpandedBundle(found.bundle.key);
+    }
   }, [activeRoute]);
 
   const toggleCollapsed = () => {
@@ -46,9 +51,18 @@ export function Sidebar({ activeRoute, onNavigate }: SidebarProps) {
       setCollapsed(false);
       AsyncStorage.setItem(COLLAPSE_PREFERENCE_KEY, "false");
     }
+    const isReopening = expandedModule !== moduleKey;
     setExpandedModule((prev) => (prev === moduleKey ? null : moduleKey));
+    if (isReopening) {
+      const module = findModule(moduleKey);
+      setExpandedBundle(module?.bundles[0]?.key ?? null);
+    }
     const target = defaultScreenFor(moduleKey);
     if (target) onNavigate(target.key);
+  };
+
+  const handleBundlePress = (bundleKey: string) => {
+    setExpandedBundle((prev) => (prev === bundleKey ? null : bundleKey));
   };
 
   return (
@@ -65,8 +79,9 @@ export function Sidebar({ activeRoute, onNavigate }: SidebarProps) {
         showsHorizontalScrollIndicator={false}
       >
         {MODULE_TREE.map((module) => {
-          const isExpanded = expandedModule === module.key && !collapsed;
-          const isActiveModule = findModule(module.key)?.screens.some((s) => s.key === activeRoute);
+          const isModuleExpanded = expandedModule === module.key && !collapsed;
+          const isActiveModule = findScreen(activeRoute)?.module.key === module.key;
+          const hasBundles = module.bundles.length > 1;
 
           return (
             <View key={module.key}>
@@ -88,7 +103,7 @@ export function Sidebar({ activeRoute, onNavigate }: SidebarProps) {
                       {module.label}
                     </Text>
                     <Ionicons
-                      name={isExpanded ? "chevron-down-outline" : "chevron-forward-outline"}
+                      name={isModuleExpanded ? "chevron-down-outline" : "chevron-forward-outline"}
                       size={14}
                       color={colors.sidebar.textMuted}
                     />
@@ -96,27 +111,64 @@ export function Sidebar({ activeRoute, onNavigate }: SidebarProps) {
                 )}
               </TouchableOpacity>
 
-              {isExpanded &&
-                module.screens.map((item) =>
-                  item.isGroupLabel ? (
-                    <Text key={item.key} style={styles.groupLabel}>
-                      {item.label}
-                    </Text>
-                  ) : (
-                    <TouchableOpacity
-                      key={item.key}
-                      style={[styles.subItem, activeRoute === item.key && styles.subItemActive]}
-                      onPress={() => onNavigate(item.key)}
-                    >
-                      <Text
-                        style={[styles.subItemLabel, activeRoute === item.key && styles.subItemLabelActive]}
-                        numberOfLines={1}
+              {isModuleExpanded &&
+                (hasBundles
+                  ? module.bundles.map((b) => {
+                      const isBundleExpanded = expandedBundle === b.key;
+                      const isActiveBundle = findScreen(activeRoute)?.bundle.key === b.key;
+                      return (
+                        <View key={b.key}>
+                          <TouchableOpacity
+                            style={[styles.bundleRow, isActiveBundle && styles.bundleRowActive]}
+                            onPress={() => handleBundlePress(b.key)}
+                          >
+                            <Text
+                              style={[styles.bundleLabel, isActiveBundle && styles.bundleLabelActive]}
+                              numberOfLines={1}
+                            >
+                              {b.label}
+                            </Text>
+                            <Ionicons
+                              name={isBundleExpanded ? "chevron-down-outline" : "chevron-forward-outline"}
+                              size={12}
+                              color={colors.sidebar.textMuted}
+                            />
+                          </TouchableOpacity>
+                          {isBundleExpanded &&
+                            b.screens.map((item) => (
+                              <TouchableOpacity
+                                key={item.key}
+                                style={[styles.subItem, activeRoute === item.key && styles.subItemActive]}
+                                onPress={() => onNavigate(item.key)}
+                              >
+                                <Text
+                                  style={[
+                                    styles.subItemLabel,
+                                    activeRoute === item.key && styles.subItemLabelActive,
+                                  ]}
+                                  numberOfLines={1}
+                                >
+                                  {item.label}
+                                </Text>
+                              </TouchableOpacity>
+                            ))}
+                        </View>
+                      );
+                    })
+                  : module.bundles[0].screens.map((item) => (
+                      <TouchableOpacity
+                        key={item.key}
+                        style={[styles.subItem, activeRoute === item.key && styles.subItemActive]}
+                        onPress={() => onNavigate(item.key)}
                       >
-                        {item.label}
-                      </Text>
-                    </TouchableOpacity>
-                  )
-                )}
+                        <Text
+                          style={[styles.subItemLabel, activeRoute === item.key && styles.subItemLabelActive]}
+                          numberOfLines={1}
+                        >
+                          {item.label}
+                        </Text>
+                      </TouchableOpacity>
+                    )))}
             </View>
           );
         })}
@@ -193,9 +245,31 @@ const styles = StyleSheet.create({
     color: colors.sidebar.activeText,
     fontWeight: "600",
   },
-  subItem: {
+  bundleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingVertical: spacing.xs + 2,
     paddingLeft: spacing.xl + spacing.xs,
+    paddingRight: spacing.sm,
+    borderRadius: radii.sm,
+  },
+  bundleRowActive: {
+    backgroundColor: "rgba(245, 201, 123, 0.08)",
+  },
+  bundleLabel: {
+    color: colors.sidebar.textMuted,
+    fontSize: typography.label.fontSize - 1,
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 0.4,
+  },
+  bundleLabelActive: {
+    color: colors.sidebar.activeText,
+  },
+  subItem: {
+    paddingVertical: spacing.xs + 2,
+    paddingLeft: spacing.xl + spacing.md,
     paddingRight: spacing.sm,
     borderRadius: radii.sm,
   },
@@ -209,15 +283,5 @@ const styles = StyleSheet.create({
   subItemLabelActive: {
     color: colors.sidebar.activeText,
     fontWeight: "600",
-  },
-  groupLabel: {
-    color: colors.sidebar.textMuted,
-    fontSize: typography.label.fontSize - 2,
-    fontWeight: "700",
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-    paddingLeft: spacing.xl + spacing.xs,
-    paddingTop: spacing.sm + 2,
-    paddingBottom: spacing.xs,
   },
 });

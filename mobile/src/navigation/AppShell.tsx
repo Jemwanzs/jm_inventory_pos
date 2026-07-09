@@ -65,9 +65,8 @@ export default function AppShell() {
           <TopBar activeRoute={activeRoute} />
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             {MODULE_TREE.flatMap((module) =>
-              module.screens
-                .filter((s) => !s.isGroupLabel)
-                .map((s) => (
+              module.bundles.flatMap((b) =>
+                b.screens.map((s) => (
                   <Stack.Screen
                     key={s.key}
                     name={s.key}
@@ -75,6 +74,7 @@ export default function AppShell() {
                     initialParams={{ label: s.label, icon: module.icon, description: s.description, tabs: s.tabs }}
                   />
                 ))
+              )
             )}
             <Stack.Screen name="More" component={MoreMenuScreen} />
           </Stack.Navigator>
