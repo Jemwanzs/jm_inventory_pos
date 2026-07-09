@@ -2,6 +2,7 @@ mod audit_logs;
 mod auth;
 mod catalog;
 mod custom_fields;
+mod dashboard;
 mod health;
 mod invites;
 mod numbering;
@@ -21,6 +22,7 @@ use crate::state::AppState;
 pub fn router() -> Router<AppState> {
     Router::new()
         .route("/api/health", get(health::health))
+        .route("/api/dashboard/summary", get(dashboard::get_summary))
         .route("/api/auth/login", post(auth::login))
         .route("/api/auth/change-password", post(auth::change_password))
         .route("/api/invites", post(invites::create_invite))

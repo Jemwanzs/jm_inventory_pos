@@ -393,3 +393,14 @@ export interface StockMovement {
 export function listStockMovements(token: string): Promise<StockMovement[]> {
   return request<StockMovement[]>("/stock/movements", {}, token);
 }
+
+export interface DashboardSummary {
+  stock_value: string;
+  product_count: number;
+  workspace_count: number;
+  movements_today: number;
+}
+
+export function getDashboardSummary(token: string): Promise<DashboardSummary> {
+  return request<DashboardSummary>("/dashboard/summary", {}, token);
+}
