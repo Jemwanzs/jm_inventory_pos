@@ -1,0 +1,21 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO stock_movements (\n            tenant_id, workspace_id, product_id, movement_type,\n            quantity_in, unit_cost, reason, created_by\n        )\n        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Uuid",
+        "Text",
+        "Numeric",
+        "Numeric",
+        "Text",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "0e02bdcd7ec6b0cff62203edf843dc3a355da13d9b1de4e9ab39131400a530dc"
+}

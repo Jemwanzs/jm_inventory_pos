@@ -343,3 +343,53 @@ export function updateProductActive(id: string, is_active: boolean, token: strin
     token
   );
 }
+
+export interface StockBalance {
+  id: string;
+  product_id: string;
+  product_name: string;
+  product_sku: string | null;
+  workspace_id: string;
+  workspace_name: string;
+  quantity_available: string;
+  average_cost: string;
+}
+
+export function listStockBalances(token: string): Promise<StockBalance[]> {
+  return request<StockBalance[]>("/stock/balances", {}, token);
+}
+
+export interface AddStockRequest {
+  workspace_id: string;
+  product_id: string;
+  movement_type: string;
+  quantity: string;
+  unit_cost?: string;
+  reason?: string;
+}
+
+export interface AddStockResponse {
+  quantity_available: string;
+  average_cost: string;
+}
+
+export function addStock(req: AddStockRequest, token: string): Promise<AddStockResponse> {
+  return request<AddStockResponse>("/stock/add", { method: "POST", body: JSON.stringify(req) }, token);
+}
+
+export interface StockMovement {
+  id: string;
+  product_name: string;
+  workspace_name: string;
+  movement_type: string;
+  quantity_in: string;
+  quantity_out: string;
+  unit_cost: string | null;
+  reason: string | null;
+  user_email: string | null;
+  created_at: string;
+}
+
+export function listStockMovements(token: string): Promise<StockMovement[]> {
+  return request<StockMovement[]>("/stock/movements", {}, token);
+}

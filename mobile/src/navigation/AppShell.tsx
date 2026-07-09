@@ -7,6 +7,9 @@ import DashboardScreen from "../screens/DashboardScreen";
 import InviteUserScreen from "../screens/InviteUserScreen";
 import MoreMenuScreen from "../screens/MoreMenuScreen";
 import PlaceholderScreen from "../screens/PlaceholderScreen";
+import AddStockScreen from "../screens/inventory/AddStockScreen";
+import StockBalancesScreen from "../screens/inventory/StockBalancesScreen";
+import StockMovementsScreen from "../screens/inventory/StockMovementsScreen";
 import AddProductScreen from "../screens/products/AddProductScreen";
 import BrandsScreen from "../screens/products/BrandsScreen";
 import CategoriesScreen from "../screens/products/CategoriesScreen";
@@ -58,6 +61,9 @@ const REAL_SCREENS: Record<string, React.ComponentType<any>> = {
   "Products.Categories": CategoriesScreen,
   "Products.Brands": BrandsScreen,
   "Products.Units": UnitsScreen,
+  "Inventory.Balances": StockBalancesScreen,
+  "Inventory.AddStock": AddStockScreen,
+  "Inventory.Movements": StockMovementsScreen,
 };
 
 export default function AppShell() {

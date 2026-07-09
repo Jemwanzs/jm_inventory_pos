@@ -8,6 +8,7 @@ mod numbering;
 mod products;
 mod roles;
 mod settings;
+mod stock;
 mod workspaces;
 
 use axum::{
@@ -79,4 +80,7 @@ pub fn router() -> Router<AppState> {
             "/api/units-of-measure",
             get(catalog::list_units).post(catalog::create_unit),
         )
+        .route("/api/stock/balances", get(stock::list_balances))
+        .route("/api/stock/add", post(stock::add_stock))
+        .route("/api/stock/movements", get(stock::list_movements))
 }
