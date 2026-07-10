@@ -473,3 +473,35 @@ export function createPurchaseOrder(req: CreateOrderRequest, token: string): Pro
 export function receivePurchaseOrder(id: string, token: string): Promise<void> {
   return request<void>(`/procurement/orders/${id}/receive`, { method: "POST" }, token);
 }
+
+export interface Customer {
+  id: string;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  address: string | null;
+  customer_group: string | null;
+  credit_limit: string;
+  is_active: boolean;
+}
+
+export interface CreateCustomerRequest {
+  name: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  customer_group?: string;
+  credit_limit?: string;
+}
+
+export function listCustomers(token: string): Promise<Customer[]> {
+  return request<Customer[]>("/customers", {}, token);
+}
+
+export function createCustomer(req: CreateCustomerRequest, token: string): Promise<Customer> {
+  return request<Customer>("/customers", { method: "POST", body: JSON.stringify(req) }, token);
+}
+
+export function updateCustomerActive(id: string, isActive: boolean, token: string): Promise<void> {
+  return request<void>(`/customers/${id}`, { method: "PATCH", body: JSON.stringify({ is_active: isActive }) }, token);
+}

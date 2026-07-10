@@ -2,6 +2,7 @@ mod audit_logs;
 mod auth;
 mod catalog;
 mod custom_fields;
+mod customers;
 mod dashboard;
 mod health;
 mod invites;
@@ -102,5 +103,13 @@ pub fn router() -> Router<AppState> {
         .route(
             "/api/procurement/orders/{id}/receive",
             post(procurement::receive_order),
+        )
+        .route(
+            "/api/customers",
+            get(customers::list_customers).post(customers::create_customer),
+        )
+        .route(
+            "/api/customers/{id}",
+            axum::routing::patch(customers::update_customer),
         )
 }
