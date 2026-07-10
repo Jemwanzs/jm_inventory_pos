@@ -1,0 +1,94 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            cs.id, w.name AS workspace_name, cs.cashier_id, u.email AS cashier_email,\n            cs.opening_float, cs.status,\n            COALESCE(m.cash_in, 0) AS \"cash_in!\",\n            COALESCE(m.cash_out, 0) AS \"cash_out!\",\n            cs.expected_cash, cs.actual_cash, cs.variance,\n            cs.opened_at, cs.closed_at\n        FROM cash_sessions cs\n        JOIN workspaces w ON w.id = cs.workspace_id\n        JOIN users u ON u.id = cs.cashier_id\n        LEFT JOIN (\n            SELECT\n                session_id,\n                SUM(amount) FILTER (WHERE movement_type = 'In') AS cash_in,\n                SUM(amount) FILTER (WHERE movement_type = 'Out') AS cash_out\n            FROM cash_movements\n            GROUP BY session_id\n        ) m ON m.session_id = cs.id\n        WHERE cs.tenant_id = $1\n        ORDER BY cs.opened_at DESC\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "workspace_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "cashier_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 3,
+        "name": "cashier_email",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "opening_float",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 5,
+        "name": "status",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "cash_in!",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 7,
+        "name": "cash_out!",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 8,
+        "name": "expected_cash",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 9,
+        "name": "actual_cash",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 10,
+        "name": "variance",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 11,
+        "name": "opened_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 12,
+        "name": "closed_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      null,
+      null,
+      true,
+      true,
+      true,
+      false,
+      true
+    ]
+  },
+  "hash": "a191cbb773f7662e7ad7def88b7c64c3e335ead1a5030c751ddc29c899011ffd"
+}

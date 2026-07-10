@@ -39,6 +39,21 @@ export interface LoginResponse {
   must_change_password: boolean;
 }
 
+export function getUserIdFromToken(token: string): string | null {
+  try {
+    const payload = token.split(".")[1];
+    const decoded = decodeURIComponent(
+      atob(payload.replace(/-/g, "+").replace(/_/g, "/"))
+        .split("")
+        .map((c) => "%" + c.charCodeAt(0).toString(16).padStart(2, "0"))
+        .join("")
+    );
+    return JSON.parse(decoded).sub ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export function login(email: string, password: string): Promise<LoginResponse> {
   return request<LoginResponse>("/auth/login", {
     method: "POST",
@@ -504,4 +519,65 @@ export function createCustomer(req: CreateCustomerRequest, token: string): Promi
 
 export function updateCustomerActive(id: string, isActive: boolean, token: string): Promise<void> {
   return request<void>(`/customers/${id}`, { method: "PATCH", body: JSON.stringify({ is_active: isActive }) }, token);
+}
+
+export interface CashSession {
+  id: string;
+  workspace_name: string;
+  cashier_id: string;
+  cashier_email: string;
+  opening_float: string;
+  status: string;
+  cash_in: string;
+  cash_out: string;
+  expected_cash: string | null;
+  actual_cash: string | null;
+  variance: string | null;
+  opened_at: string;
+  closed_at: string | null;
+}
+
+export function listCashSessions(token: string): Promise<CashSession[]> {
+  return request<CashSession[]>("/cash/sessions", {}, token);
+}
+
+export function openShift(workspace_id: string, opening_float: string, token: string): Promise<{ id: string }> {
+  return request<{ id: string }>("/cash/sessions", { method: "POST", body: JSON.stringify({ workspace_id, opening_float }) }, token);
+}
+
+export function recordCashMovement(
+  sessionId: string,
+  movement_type: "In" | "Out",
+  amount: string,
+  reason: string | undefined,
+  token: string
+): Promise<void> {
+  return request<void>(
+    `/cash/sessions/${sessionId}/movements`,
+    { method: "POST", body: JSON.stringify({ movement_type, amount, reason }) },
+    token
+  );
+}
+
+export function closeShift(
+  sessionId: string,
+  actual_cash: string,
+  notes: string | undefined,
+  token: string
+): Promise<{ expected_cash: string; variance: string }> {
+  return request(`/cash/sessions/${sessionId}/close`, { method: "POST", body: JSON.stringify({ actual_cash, notes }) }, token);
+}
+
+export interface CashMovement {
+  id: string;
+  workspace_name: string;
+  cashier_email: string | null;
+  movement_type: string;
+  amount: string;
+  reason: string | null;
+  created_at: string;
+}
+
+export function listCashMovements(token: string): Promise<CashMovement[]> {
+  return request<CashMovement[]>("/cash/movements", {}, token);
 }

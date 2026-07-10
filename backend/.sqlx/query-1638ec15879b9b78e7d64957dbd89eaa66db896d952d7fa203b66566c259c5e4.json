@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        UPDATE cash_sessions\n        SET status = 'Closed', expected_cash = $2, actual_cash = $3, variance = $4, notes = $5, closed_at = now()\n        WHERE id = $1\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Numeric",
+        "Numeric",
+        "Numeric",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "1638ec15879b9b78e7d64957dbd89eaa66db896d952d7fa203b66566c259c5e4"
+}

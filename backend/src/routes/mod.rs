@@ -1,5 +1,6 @@
 mod audit_logs;
 mod auth;
+mod cash;
 mod catalog;
 mod custom_fields;
 mod customers;
@@ -112,4 +113,8 @@ pub fn router() -> Router<AppState> {
             "/api/customers/{id}",
             axum::routing::patch(customers::update_customer),
         )
+        .route("/api/cash/sessions", get(cash::list_sessions).post(cash::open_shift))
+        .route("/api/cash/sessions/{id}/movements", post(cash::record_movement))
+        .route("/api/cash/sessions/{id}/close", post(cash::close_shift))
+        .route("/api/cash/movements", get(cash::list_movements))
 }

@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT id FROM cash_sessions WHERE tenant_id = $1 AND cashier_id = $2 AND status = 'Open'",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "f9f0c33861989fd2e7df4092ec0556ff72430688cf47d15e5f4a9c1250ec1b82"
+}

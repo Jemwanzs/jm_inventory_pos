@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            COALESCE(SUM(amount) FILTER (WHERE movement_type = 'In'), 0) AS \"cash_in!\",\n            COALESCE(SUM(amount) FILTER (WHERE movement_type = 'Out'), 0) AS \"cash_out!\"\n        FROM cash_movements\n        WHERE session_id = $1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "cash_in!",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 1,
+        "name": "cash_out!",
+        "type_info": "Numeric"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      null,
+      null
+    ]
+  },
+  "hash": "a2d5d82b2adbe126926767e559e8986f221dc5ddb4fa1581e362fb06ac5d6264"
+}

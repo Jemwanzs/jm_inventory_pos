@@ -1,0 +1,58 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            cm.id, w.name AS workspace_name, u.email AS \"cashier_email?\",\n            cm.movement_type, cm.amount, cm.reason, cm.created_at\n        FROM cash_movements cm\n        JOIN cash_sessions cs ON cs.id = cm.session_id\n        JOIN workspaces w ON w.id = cs.workspace_id\n        LEFT JOIN users u ON u.id = cm.created_by\n        WHERE cm.tenant_id = $1\n        ORDER BY cm.created_at DESC\n        LIMIT 100\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "workspace_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "cashier_email?",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "movement_type",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "amount",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 5,
+        "name": "reason",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "fea091612dad8ec2994945d3d7960b6f7d3b80dc51bb175ea9f8dbbf2914d647"
+}
