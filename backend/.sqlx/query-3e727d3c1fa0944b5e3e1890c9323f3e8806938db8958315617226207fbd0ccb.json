@@ -1,0 +1,35 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            SELECT sb.quantity_available, sb.average_cost, p.name AS product_name\n            FROM stock_balances sb\n            JOIN products p ON p.id = sb.product_id\n            WHERE sb.workspace_id = $1 AND sb.product_id = $2\n            FOR UPDATE\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "quantity_available",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 1,
+        "name": "average_cost",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 2,
+        "name": "product_name",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "3e727d3c1fa0944b5e3e1890c9323f3e8806938db8958315617226207fbd0ccb"
+}

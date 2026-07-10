@@ -1,0 +1,70 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            s.id, w.name AS workspace_name, c.name AS \"customer_name?\", u.email AS cashier_email,\n            COALESCE(i.item_count, 0) AS \"item_count!\",\n            s.total, s.payment_method, s.amount_paid, s.created_at\n        FROM sales s\n        JOIN workspaces w ON w.id = s.workspace_id\n        JOIN users u ON u.id = s.cashier_id\n        LEFT JOIN customers c ON c.id = s.customer_id\n        LEFT JOIN (\n            SELECT sale_id, COUNT(*) AS item_count FROM sale_items GROUP BY sale_id\n        ) i ON i.sale_id = s.id\n        WHERE s.tenant_id = $1\n        ORDER BY s.created_at DESC\n        LIMIT 100\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "workspace_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "customer_name?",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "cashier_email",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "item_count!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 5,
+        "name": "total",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 6,
+        "name": "payment_method",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "amount_paid",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 8,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      null,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "a82ad406f2abda947f1547952e0153b5124856a84fd8b6dd4d86387fc1bcb4fd"
+}

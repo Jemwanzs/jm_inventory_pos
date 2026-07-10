@@ -9,6 +9,8 @@ import CashMovementsScreen from "../screens/cash/CashMovementsScreen";
 import CashSessionsScreen from "../screens/cash/CashSessionsScreen";
 import AddCustomerScreen from "../screens/customers/AddCustomerScreen";
 import CustomerListScreen from "../screens/customers/CustomerListScreen";
+import POSTerminalScreen from "../screens/pos/POSTerminalScreen";
+import SalesListScreen from "../screens/pos/SalesListScreen";
 import MoreMenuScreen from "../screens/MoreMenuScreen";
 import PlaceholderScreen from "../screens/PlaceholderScreen";
 import AddStockScreen from "../screens/inventory/AddStockScreen";
@@ -78,6 +80,8 @@ const REAL_SCREENS: Record<string, React.ComponentType<any>> = {
   "Customers.Add": AddCustomerScreen,
   "Cash.Sessions": CashSessionsScreen,
   "Cash.Movements": CashMovementsScreen,
+  "POS.Terminal": POSTerminalScreen,
+  "POS.Sales": SalesListScreen,
 };
 
 export default function AppShell() {

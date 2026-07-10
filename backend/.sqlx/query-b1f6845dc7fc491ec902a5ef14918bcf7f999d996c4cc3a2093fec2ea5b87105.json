@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            UPDATE stock_balances\n            SET quantity_available = quantity_available - $3, updated_at = now()\n            WHERE workspace_id = $1 AND product_id = $2\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Numeric"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "b1f6845dc7fc491ec902a5ef14918bcf7f999d996c4cc3a2093fec2ea5b87105"
+}

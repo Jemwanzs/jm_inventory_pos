@@ -581,3 +581,37 @@ export interface CashMovement {
 export function listCashMovements(token: string): Promise<CashMovement[]> {
   return request<CashMovement[]>("/cash/movements", {}, token);
 }
+
+export interface Sale {
+  id: string;
+  workspace_name: string;
+  customer_name: string | null;
+  cashier_email: string;
+  item_count: number;
+  total: string;
+  payment_method: string;
+  amount_paid: string;
+  created_at: string;
+}
+
+export interface SaleItemRequest {
+  product_id: string;
+  quantity: string;
+  unit_price: string;
+}
+
+export interface CreateSaleRequest {
+  workspace_id: string;
+  customer_id?: string;
+  payment_method: string;
+  amount_paid: string;
+  items: SaleItemRequest[];
+}
+
+export function listSales(token: string): Promise<Sale[]> {
+  return request<Sale[]>("/pos/sales", {}, token);
+}
+
+export function createSale(req: CreateSaleRequest, token: string): Promise<{ id: string; total: string }> {
+  return request("/pos/sales", { method: "POST", body: JSON.stringify(req) }, token);
+}

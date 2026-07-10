@@ -8,6 +8,7 @@ mod dashboard;
 mod health;
 mod invites;
 mod numbering;
+mod pos;
 mod procurement;
 mod products;
 mod roles;
@@ -117,4 +118,5 @@ pub fn router() -> Router<AppState> {
         .route("/api/cash/sessions/{id}/movements", post(cash::record_movement))
         .route("/api/cash/sessions/{id}/close", post(cash::close_shift))
         .route("/api/cash/movements", get(cash::list_movements))
+        .route("/api/pos/sales", get(pos::list_sales).post(pos::create_sale))
 }
