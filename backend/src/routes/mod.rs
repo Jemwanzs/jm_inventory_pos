@@ -10,6 +10,7 @@ mod products;
 mod roles;
 mod settings;
 mod stock;
+mod suppliers;
 mod workspaces;
 
 use axum::{
@@ -85,4 +86,12 @@ pub fn router() -> Router<AppState> {
         .route("/api/stock/balances", get(stock::list_balances))
         .route("/api/stock/add", post(stock::add_stock))
         .route("/api/stock/movements", get(stock::list_movements))
+        .route(
+            "/api/suppliers",
+            get(suppliers::list_suppliers).post(suppliers::create_supplier),
+        )
+        .route(
+            "/api/suppliers/{id}",
+            axum::routing::patch(suppliers::update_supplier),
+        )
 }

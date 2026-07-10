@@ -404,3 +404,35 @@ export interface DashboardSummary {
 export function getDashboardSummary(token: string): Promise<DashboardSummary> {
   return request<DashboardSummary>("/dashboard/summary", {}, token);
 }
+
+export interface Supplier {
+  id: string;
+  name: string;
+  contact_person: string | null;
+  phone: string | null;
+  email: string | null;
+  address: string | null;
+  payment_terms: string | null;
+  is_active: boolean;
+}
+
+export interface CreateSupplierRequest {
+  name: string;
+  contact_person?: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  payment_terms?: string;
+}
+
+export function listSuppliers(token: string): Promise<Supplier[]> {
+  return request<Supplier[]>("/suppliers", {}, token);
+}
+
+export function createSupplier(req: CreateSupplierRequest, token: string): Promise<Supplier> {
+  return request<Supplier>("/suppliers", { method: "POST", body: JSON.stringify(req) }, token);
+}
+
+export function updateSupplierActive(id: string, isActive: boolean, token: string): Promise<void> {
+  return request<void>(`/suppliers/${id}`, { method: "PATCH", body: JSON.stringify({ is_active: isActive }) }, token);
+}

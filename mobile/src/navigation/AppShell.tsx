@@ -28,6 +28,8 @@ import SecuritySettingsScreen from "../screens/settings/SecuritySettingsScreen";
 import TaxSettingsScreen from "../screens/settings/TaxSettingsScreen";
 import TemplatesScreen from "../screens/settings/TemplatesScreen";
 import WorkspacesScreen from "../screens/settings/WorkspacesScreen";
+import AddSupplierScreen from "../screens/suppliers/AddSupplierScreen";
+import SupplierListScreen from "../screens/suppliers/SupplierListScreen";
 import { colors } from "../theme";
 import { BottomNav } from "./BottomNav";
 import { FloatingAIButton } from "./FloatingAIButton";
@@ -64,6 +66,8 @@ const REAL_SCREENS: Record<string, React.ComponentType<any>> = {
   "Inventory.Balances": StockBalancesScreen,
   "Inventory.AddStock": AddStockScreen,
   "Inventory.Movements": StockMovementsScreen,
+  "Suppliers.List": SupplierListScreen,
+  "Suppliers.Add": AddSupplierScreen,
 };
 
 export default function AppShell() {
