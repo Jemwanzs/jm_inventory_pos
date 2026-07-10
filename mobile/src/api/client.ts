@@ -615,3 +615,33 @@ export function listSales(token: string): Promise<Sale[]> {
 export function createSale(req: CreateSaleRequest, token: string): Promise<{ id: string; total: string }> {
   return request("/pos/sales", { method: "POST", body: JSON.stringify(req) }, token);
 }
+
+export interface ApprovalRequest {
+  id: string;
+  module: string;
+  reference_type: string;
+  reference_id: string;
+  description: string;
+  status: string;
+  requested_by_email: string;
+  decided_by_email: string | null;
+  decision_notes: string | null;
+  created_at: string;
+  decided_at: string | null;
+}
+
+export function listPendingApprovals(token: string): Promise<ApprovalRequest[]> {
+  return request<ApprovalRequest[]>("/approvals/pending", {}, token);
+}
+
+export function listMyApprovalRequests(token: string): Promise<ApprovalRequest[]> {
+  return request<ApprovalRequest[]>("/approvals/my-requests", {}, token);
+}
+
+export function approveRequest(id: string, notes: string | undefined, token: string): Promise<void> {
+  return request<void>(`/approvals/${id}/approve`, { method: "POST", body: JSON.stringify({ notes }) }, token);
+}
+
+export function rejectRequest(id: string, notes: string | undefined, token: string): Promise<void> {
+  return request<void>(`/approvals/${id}/reject`, { method: "POST", body: JSON.stringify({ notes }) }, token);
+}

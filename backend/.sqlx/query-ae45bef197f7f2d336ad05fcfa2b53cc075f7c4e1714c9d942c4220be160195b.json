@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT status FROM approval_requests\n        WHERE reference_type = 'purchase_order' AND reference_id = $1\n        ORDER BY created_at DESC\n        LIMIT 1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "status",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "ae45bef197f7f2d336ad05fcfa2b53cc075f7c4e1714c9d942c4220be160195b"
+}

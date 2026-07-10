@@ -9,6 +9,10 @@ use uuid::Uuid;
 
 use crate::{audit, auth::extractor::AuthUser, error::AppError, state::AppState, tenant::resolve_tenant_id};
 
+fn large_order_threshold() -> Decimal {
+    Decimal::new(100_000, 0)
+}
+
 #[derive(Serialize)]
 pub struct PurchaseOrderResponse {
     id: Uuid,
@@ -106,7 +110,10 @@ pub async fn create_order(
     .fetch_one(&mut *tx)
     .await?;
 
+    let mut subtotal = Decimal::ZERO;
     for item in &req.items {
+        subtotal += item.quantity * item.unit_cost;
+
         sqlx::query!(
             r#"
             INSERT INTO purchase_order_items (purchase_order_id, product_id, quantity, unit_cost)
@@ -116,6 +123,25 @@ pub async fn create_order(
             item.product_id,
             item.quantity,
             item.unit_cost
+        )
+        .execute(&mut *tx)
+        .await?;
+    }
+
+    // Large purchase orders need sign-off before they can be received —
+    // a real (if simple) maker-checker flow through the generic
+    // approval_requests table. LARGE_ORDER_THRESHOLD is a placeholder
+    // until Settings > Approvals exposes a configurable PO threshold.
+    if subtotal > large_order_threshold() {
+        sqlx::query!(
+            r#"
+            INSERT INTO approval_requests (tenant_id, module, reference_type, reference_id, description, requested_by)
+            VALUES ($1, 'procurement', 'purchase_order', $2, $3, $4)
+            "#,
+            tenant_id,
+            order_id,
+            format!("Purchase order for KES {subtotal} needs approval before it can be received"),
+            auth_user.user_id
         )
         .execute(&mut *tx)
         .await?;
@@ -154,6 +180,32 @@ pub async fn receive_order(
 
     if order.status != "Draft" {
         return Err(AppError::Validation(format!("purchase order is already {}", order.status)));
+    }
+
+    let approval_status = sqlx::query_scalar!(
+        r#"
+        SELECT status FROM approval_requests
+        WHERE reference_type = 'purchase_order' AND reference_id = $1
+        ORDER BY created_at DESC
+        LIMIT 1
+        "#,
+        id
+    )
+    .fetch_optional(&mut *tx)
+    .await?;
+
+    match approval_status.as_deref() {
+        Some("Pending") => {
+            return Err(AppError::Validation(
+                "this purchase order is over the approval threshold and needs sign-off before it can be received (see Approvals Center)".to_string(),
+            ))
+        }
+        Some("Rejected") => {
+            return Err(AppError::Validation(
+                "this purchase order's approval request was rejected and cannot be received".to_string(),
+            ))
+        }
+        _ => {}
     }
 
     let items = sqlx::query!(

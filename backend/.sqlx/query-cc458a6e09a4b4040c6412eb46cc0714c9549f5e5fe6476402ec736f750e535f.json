@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO approval_requests (tenant_id, module, reference_type, reference_id, description, requested_by)\n            VALUES ($1, 'procurement', 'purchase_order', $2, $3, $4)\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Text",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "cc458a6e09a4b4040c6412eb46cc0714c9549f5e5fe6476402ec736f750e535f"
+}

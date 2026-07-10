@@ -1,3 +1,4 @@
+mod approvals;
 mod audit_logs;
 mod auth;
 mod cash;
@@ -119,4 +120,8 @@ pub fn router() -> Router<AppState> {
         .route("/api/cash/sessions/{id}/close", post(cash::close_shift))
         .route("/api/cash/movements", get(cash::list_movements))
         .route("/api/pos/sales", get(pos::list_sales).post(pos::create_sale))
+        .route("/api/approvals/pending", get(approvals::list_pending))
+        .route("/api/approvals/my-requests", get(approvals::list_my_requests))
+        .route("/api/approvals/{id}/approve", post(approvals::approve_request))
+        .route("/api/approvals/{id}/reject", post(approvals::reject_request))
 }

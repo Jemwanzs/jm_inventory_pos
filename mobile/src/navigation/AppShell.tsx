@@ -5,6 +5,8 @@ import { useWindowDimensions, View } from "react-native";
 
 import DashboardScreen from "../screens/DashboardScreen";
 import InviteUserScreen from "../screens/InviteUserScreen";
+import MyRequestsScreen from "../screens/approvals/MyRequestsScreen";
+import PendingApprovalsScreen from "../screens/approvals/PendingApprovalsScreen";
 import CashMovementsScreen from "../screens/cash/CashMovementsScreen";
 import CashSessionsScreen from "../screens/cash/CashSessionsScreen";
 import AddCustomerScreen from "../screens/customers/AddCustomerScreen";
@@ -82,6 +84,8 @@ const REAL_SCREENS: Record<string, React.ComponentType<any>> = {
   "Cash.Movements": CashMovementsScreen,
   "POS.Terminal": POSTerminalScreen,
   "POS.Sales": SalesListScreen,
+  "Approvals.Pending": PendingApprovalsScreen,
+  "Approvals.MyRequests": MyRequestsScreen,
 };
 
 export default function AppShell() {
