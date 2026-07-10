@@ -436,3 +436,40 @@ export function createSupplier(req: CreateSupplierRequest, token: string): Promi
 export function updateSupplierActive(id: string, isActive: boolean, token: string): Promise<void> {
   return request<void>(`/suppliers/${id}`, { method: "PATCH", body: JSON.stringify({ is_active: isActive }) }, token);
 }
+
+export interface PurchaseOrder {
+  id: string;
+  supplier_name: string;
+  workspace_name: string;
+  status: string;
+  item_count: number;
+  total_value: string;
+  notes: string | null;
+  created_at: string;
+  received_at: string | null;
+}
+
+export interface OrderItemRequest {
+  product_id: string;
+  quantity: string;
+  unit_cost: string;
+}
+
+export interface CreateOrderRequest {
+  supplier_id: string;
+  workspace_id: string;
+  notes?: string;
+  items: OrderItemRequest[];
+}
+
+export function listPurchaseOrders(token: string): Promise<PurchaseOrder[]> {
+  return request<PurchaseOrder[]>("/procurement/orders", {}, token);
+}
+
+export function createPurchaseOrder(req: CreateOrderRequest, token: string): Promise<{ id: string }> {
+  return request<{ id: string }>("/procurement/orders", { method: "POST", body: JSON.stringify(req) }, token);
+}
+
+export function receivePurchaseOrder(id: string, token: string): Promise<void> {
+  return request<void>(`/procurement/orders/${id}/receive`, { method: "POST" }, token);
+}

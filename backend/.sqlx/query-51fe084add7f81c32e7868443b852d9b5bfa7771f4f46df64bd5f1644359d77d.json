@@ -1,0 +1,70 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            po.id, s.name AS supplier_name, w.name AS workspace_name, po.status,\n            COALESCE(i.item_count, 0) AS \"item_count!\",\n            COALESCE(i.total_value, 0) AS \"total_value!\",\n            po.notes, po.created_at, po.received_at\n        FROM purchase_orders po\n        JOIN suppliers s ON s.id = po.supplier_id\n        JOIN workspaces w ON w.id = po.workspace_id\n        LEFT JOIN (\n            SELECT purchase_order_id, COUNT(*) AS item_count, SUM(quantity * unit_cost) AS total_value\n            FROM purchase_order_items\n            GROUP BY purchase_order_id\n        ) i ON i.purchase_order_id = po.id\n        WHERE po.tenant_id = $1\n        ORDER BY po.created_at DESC\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "supplier_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "workspace_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "status",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "item_count!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 5,
+        "name": "total_value!",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 6,
+        "name": "notes",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "received_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      null,
+      null,
+      true,
+      false,
+      true
+    ]
+  },
+  "hash": "51fe084add7f81c32e7868443b852d9b5bfa7771f4f46df64bd5f1644359d77d"
+}

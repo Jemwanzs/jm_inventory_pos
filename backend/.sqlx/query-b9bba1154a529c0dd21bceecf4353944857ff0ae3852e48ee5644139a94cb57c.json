@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE purchase_orders SET status = 'Received', received_at = now() WHERE id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "b9bba1154a529c0dd21bceecf4353944857ff0ae3852e48ee5644139a94cb57c"
+}

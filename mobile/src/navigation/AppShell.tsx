@@ -15,6 +15,7 @@ import BrandsScreen from "../screens/products/BrandsScreen";
 import CategoriesScreen from "../screens/products/CategoriesScreen";
 import ProductListScreen from "../screens/products/ProductListScreen";
 import UnitsScreen from "../screens/products/UnitsScreen";
+import PurchaseOrdersScreen from "../screens/procurement/PurchaseOrdersScreen";
 import ApprovalSettingsScreen from "../screens/settings/ApprovalSettingsScreen";
 import AuditLogsScreen from "../screens/settings/AuditLogsScreen";
 import BusinessProfileScreen from "../screens/settings/BusinessProfileScreen";
@@ -68,6 +69,7 @@ const REAL_SCREENS: Record<string, React.ComponentType<any>> = {
   "Inventory.Movements": StockMovementsScreen,
   "Suppliers.List": SupplierListScreen,
   "Suppliers.Add": AddSupplierScreen,
+  "Procurement.Orders": PurchaseOrdersScreen,
 };
 
 export default function AppShell() {

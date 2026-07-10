@@ -6,6 +6,7 @@ mod dashboard;
 mod health;
 mod invites;
 mod numbering;
+mod procurement;
 mod products;
 mod roles;
 mod settings;
@@ -93,5 +94,13 @@ pub fn router() -> Router<AppState> {
         .route(
             "/api/suppliers/{id}",
             axum::routing::patch(suppliers::update_supplier),
+        )
+        .route(
+            "/api/procurement/orders",
+            get(procurement::list_orders).post(procurement::create_order),
+        )
+        .route(
+            "/api/procurement/orders/{id}/receive",
+            post(procurement::receive_order),
         )
 }

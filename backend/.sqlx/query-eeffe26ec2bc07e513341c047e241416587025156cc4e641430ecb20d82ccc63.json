@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO stock_balances (tenant_id, workspace_id, product_id, quantity_available, average_cost, updated_at)\n            VALUES ($1, $2, $3, $4, $5, now())\n            ON CONFLICT (workspace_id, product_id)\n            DO UPDATE SET quantity_available = $4, average_cost = $5, updated_at = now()\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Uuid",
+        "Numeric",
+        "Numeric"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "eeffe26ec2bc07e513341c047e241416587025156cc4e641430ecb20d82ccc63"
+}
