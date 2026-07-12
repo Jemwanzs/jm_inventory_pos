@@ -7,7 +7,10 @@ use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::{audit, auth::extractor::AuthUser, error::AppError, state::AppState, tenant::resolve_tenant_id};
+use crate::{
+    approval_engine, audit, auth::extractor::AuthUser, error::AppError, state::AppState,
+    tenant::resolve_tenant_id,
+};
 
 const MOVEMENT_TYPES: &[&str] = &["In", "Out"];
 
@@ -151,6 +154,38 @@ pub async fn record_movement(
         return Err(AppError::Validation("cash session is already closed".to_string()));
     }
 
+    // Cash going OUT (expenses/petty cash) is exactly the "payment" event
+    // the approval engine exists for: if a workflow is configured for
+    // cash_expense and the amount crosses its threshold, the movement is
+    // NOT recorded yet — it's created only once the request clears every
+    // approval step (see approval_engine::dispatch_approved_payload).
+    if req.movement_type == "Out" {
+        let pending = approval_engine::evaluate(
+            &state,
+            approval_engine::EvaluateRequest {
+                tenant_id,
+                trigger_type: "cash_expense",
+                module: "cash_management",
+                amount: req.amount,
+                reference_type: "cash_movement",
+                reference_id: session_id,
+                description: format!("Cash-out of KES {} needs approval before it's recorded", req.amount),
+                requested_by: auth_user.user_id,
+                payload: Some(serde_json::json!({
+                    "session_id": session_id,
+                    "amount": req.amount,
+                    "reason": req.reason,
+                    "requested_by": auth_user.user_id,
+                })),
+            },
+        )
+        .await?;
+
+        if let Some(request_id) = pending {
+            return Ok(Json(serde_json::json!({ "ok": true, "pending_approval": true, "request_id": request_id })));
+        }
+    }
+
     sqlx::query!(
         r#"
         INSERT INTO cash_movements (tenant_id, session_id, movement_type, amount, reason, created_by)
@@ -170,7 +205,7 @@ pub async fn record_movement(
         .await
         .map_err(AppError::Internal)?;
 
-    Ok(Json(serde_json::json!({ "ok": true })))
+    Ok(Json(serde_json::json!({ "ok": true, "pending_approval": false })))
 }
 
 #[derive(Deserialize)]

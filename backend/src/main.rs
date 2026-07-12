@@ -1,3 +1,4 @@
+mod approval_engine;
 mod audit;
 mod auth;
 mod bootstrap;

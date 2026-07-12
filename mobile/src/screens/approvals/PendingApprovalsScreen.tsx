@@ -76,6 +76,7 @@ export default function PendingApprovalsScreen() {
                 <Text style={styles.rowMeta}>
                   {r.module} · requested by {r.requested_by_email} ·{" "}
                   {new Date(r.created_at).toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                  {r.total_steps > 1 ? ` · step ${r.step_order} of ${r.total_steps}` : ""}
                 </Text>
               </View>
               <View style={styles.actions}>

@@ -8,6 +8,7 @@ mod customers;
 mod dashboard;
 mod health;
 mod invites;
+mod notifications;
 mod numbering;
 mod pos;
 mod procurement;
@@ -19,6 +20,7 @@ mod settings;
 mod stock;
 mod suppliers;
 mod tasks;
+mod users;
 mod workspaces;
 
 use axum::{
@@ -127,6 +129,18 @@ pub fn router() -> Router<AppState> {
         .route("/api/approvals/my-requests", get(approvals::list_my_requests))
         .route("/api/approvals/{id}/approve", post(approvals::approve_request))
         .route("/api/approvals/{id}/reject", post(approvals::reject_request))
+        .route(
+            "/api/approval-workflows",
+            get(approvals::list_workflows).post(approvals::create_workflow),
+        )
+        .route(
+            "/api/approval-workflows/{id}",
+            axum::routing::patch(approvals::update_workflow_active).delete(approvals::delete_workflow),
+        )
+        .route("/api/users", get(users::list_users))
+        .route("/api/notifications", get(notifications::list_notifications))
+        .route("/api/notifications/{id}/read", post(notifications::mark_read))
+        .route("/api/notifications/read-all", post(notifications::mark_all_read))
         .route(
             "/api/production/recipes",
             get(production::list_recipes).post(production::create_recipe),

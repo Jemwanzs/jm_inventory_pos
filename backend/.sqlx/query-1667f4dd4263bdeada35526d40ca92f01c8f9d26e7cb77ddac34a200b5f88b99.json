@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO cash_movements (tenant_id, session_id, movement_type, amount, reason, created_by)\n            VALUES ($1, $2, 'Out', $3, $4, $5)\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Numeric",
+        "Text",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "1667f4dd4263bdeada35526d40ca92f01c8f9d26e7cb77ddac34a200b5f88b99"
+}

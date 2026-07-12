@@ -7,11 +7,10 @@ use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::{audit, auth::extractor::AuthUser, error::AppError, state::AppState, tenant::resolve_tenant_id};
-
-fn large_order_threshold() -> Decimal {
-    Decimal::new(100_000, 0)
-}
+use crate::{
+    approval_engine, audit, auth::extractor::AuthUser, error::AppError, state::AppState,
+    tenant::resolve_tenant_id,
+};
 
 #[derive(Serialize)]
 pub struct PurchaseOrderResponse {
@@ -128,26 +127,27 @@ pub async fn create_order(
         .await?;
     }
 
-    // Large purchase orders need sign-off before they can be received —
-    // a real (if simple) maker-checker flow through the generic
-    // approval_requests table. LARGE_ORDER_THRESHOLD is a placeholder
-    // until Settings > Approvals exposes a configurable PO threshold.
-    if subtotal > large_order_threshold() {
-        sqlx::query!(
-            r#"
-            INSERT INTO approval_requests (tenant_id, module, reference_type, reference_id, description, requested_by)
-            VALUES ($1, 'procurement', 'purchase_order', $2, $3, $4)
-            "#,
-            tenant_id,
-            order_id,
-            format!("Purchase order for KES {subtotal} needs approval before it can be received"),
-            auth_user.user_id
-        )
-        .execute(&mut *tx)
-        .await?;
-    }
-
     tx.commit().await?;
+
+    // Large purchase orders need sign-off before they can be received.
+    // Whether that happens at all, at what threshold, and who signs off
+    // is entirely driven by the tenant's configured Approval Workflows
+    // (Approvals Center > Configuration) — see approval_engine::evaluate.
+    approval_engine::evaluate(
+        &state,
+        approval_engine::EvaluateRequest {
+            tenant_id,
+            trigger_type: "purchase_order_create",
+            module: "procurement",
+            amount: subtotal,
+            reference_type: "purchase_order",
+            reference_id: order_id,
+            description: format!("Purchase order for KES {subtotal} needs approval before it can be received"),
+            requested_by: auth_user.user_id,
+            payload: None,
+        },
+    )
+    .await?;
 
     audit::record(&state.db, Some(tenant_id), Some(auth_user.user_id), "create_purchase_order", "procurement")
         .await

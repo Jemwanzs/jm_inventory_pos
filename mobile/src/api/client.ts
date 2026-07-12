@@ -551,8 +551,8 @@ export function recordCashMovement(
   amount: string,
   reason: string | undefined,
   token: string
-): Promise<void> {
-  return request<void>(
+): Promise<{ ok: boolean; pending_approval?: boolean; request_id?: string }> {
+  return request(
     `/cash/sessions/${sessionId}/movements`,
     { method: "POST", body: JSON.stringify({ movement_type, amount, reason }) },
     token
@@ -626,6 +626,8 @@ export interface ApprovalRequest {
   requested_by_email: string;
   decided_by_email: string | null;
   decision_notes: string | null;
+  step_order: number;
+  total_steps: number;
   created_at: string;
   decided_at: string | null;
 }
@@ -636,6 +638,76 @@ export function listPendingApprovals(token: string): Promise<ApprovalRequest[]> 
 
 export function listMyApprovalRequests(token: string): Promise<ApprovalRequest[]> {
   return request<ApprovalRequest[]>("/approvals/my-requests", {}, token);
+}
+
+export interface WorkflowStep {
+  step_order: number;
+  approver_user_id: string;
+  approver_name: string;
+}
+
+export interface ApprovalWorkflow {
+  id: string;
+  name: string;
+  trigger_type: string;
+  threshold: string | null;
+  is_active: boolean;
+  steps: WorkflowStep[];
+}
+
+export interface CreateWorkflowRequest {
+  name: string;
+  trigger_type: string;
+  threshold?: string;
+  steps: { approver_user_id: string }[];
+}
+
+export function listWorkflows(token: string): Promise<ApprovalWorkflow[]> {
+  return request<ApprovalWorkflow[]>("/approval-workflows", {}, token);
+}
+
+export function createWorkflow(req: CreateWorkflowRequest, token: string): Promise<{ id: string }> {
+  return request<{ id: string }>("/approval-workflows", { method: "POST", body: JSON.stringify(req) }, token);
+}
+
+export function updateWorkflowActive(id: string, isActive: boolean, token: string): Promise<void> {
+  return request<void>(`/approval-workflows/${id}`, { method: "PATCH", body: JSON.stringify({ is_active: isActive }) }, token);
+}
+
+export function deleteWorkflow(id: string, token: string): Promise<void> {
+  return request<void>(`/approval-workflows/${id}`, { method: "DELETE" }, token);
+}
+
+export interface BasicUser {
+  id: string;
+  email: string;
+  full_name: string;
+}
+
+export function listUsers(token: string): Promise<BasicUser[]> {
+  return request<BasicUser[]>("/users", {}, token);
+}
+
+export interface Notification {
+  id: string;
+  title: string;
+  body: string | null;
+  link_module: string | null;
+  link_reference_id: string | null;
+  is_read: boolean;
+  created_at: string;
+}
+
+export function listNotifications(token: string): Promise<Notification[]> {
+  return request<Notification[]>("/notifications", {}, token);
+}
+
+export function markNotificationRead(id: string, token: string): Promise<void> {
+  return request<void>(`/notifications/${id}/read`, { method: "POST" }, token);
+}
+
+export function markAllNotificationsRead(token: string): Promise<void> {
+  return request<void>("/notifications/read-all", { method: "POST" }, token);
 }
 
 export function approveRequest(id: string, notes: string | undefined, token: string): Promise<void> {

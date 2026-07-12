@@ -5,6 +5,7 @@ import { useWindowDimensions, View } from "react-native";
 
 import DashboardScreen from "../screens/DashboardScreen";
 import InviteUserScreen from "../screens/InviteUserScreen";
+import ApprovalWorkflowsScreen from "../screens/approvals/ApprovalWorkflowsScreen";
 import MyRequestsScreen from "../screens/approvals/MyRequestsScreen";
 import PendingApprovalsScreen from "../screens/approvals/PendingApprovalsScreen";
 import CashMovementsScreen from "../screens/cash/CashMovementsScreen";
@@ -34,6 +35,7 @@ import AuditLogsScreen from "../screens/settings/AuditLogsScreen";
 import BusinessProfileScreen from "../screens/settings/BusinessProfileScreen";
 import CustomFieldsScreen from "../screens/settings/CustomFieldsScreen";
 import InventorySettingsScreen from "../screens/settings/InventorySettingsScreen";
+import NotificationCenterScreen from "../screens/settings/NotificationCenterScreen";
 import NotificationSettingsScreen from "../screens/settings/NotificationSettingsScreen";
 import NumberingSettingsScreen from "../screens/settings/NumberingSettingsScreen";
 import POSSettingsScreen from "../screens/settings/POSSettingsScreen";
@@ -66,6 +68,7 @@ const REAL_SCREENS: Record<string, React.ComponentType<any>> = {
   "Settings.Numbering": NumberingSettingsScreen,
   "Settings.Tax": TaxSettingsScreen,
   "Settings.Notifications": NotificationSettingsScreen,
+  "Settings.NotificationCenter": NotificationCenterScreen,
   "Settings.Security": SecuritySettingsScreen,
   "Settings.AuditLogs": AuditLogsScreen,
   "Settings.Approvals": ApprovalSettingsScreen,
@@ -91,6 +94,8 @@ const REAL_SCREENS: Record<string, React.ComponentType<any>> = {
   "POS.Sales": SalesListScreen,
   "Approvals.Pending": PendingApprovalsScreen,
   "Approvals.MyRequests": MyRequestsScreen,
+  "Approvals.Workflows": ApprovalWorkflowsScreen,
+  "Approvals.Builder": ApprovalWorkflowsScreen,
   "Production.Recipes": RecipesScreen,
   "Production.Orders": ProductionOrdersScreen,
   "Tasks.Board": TaskBoardScreen,

@@ -1,0 +1,65 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            ar.workflow_id, ar.step_order, ar.total_steps, ar.status, ar.requested_by,\n            ar.description, ar.payload,\n            aw.trigger_type AS \"trigger_type?\"\n        FROM approval_requests ar\n        LEFT JOIN approval_workflows aw ON aw.id = ar.workflow_id\n        WHERE ar.id = $1 AND ar.tenant_id = $2\n        FOR UPDATE OF ar\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "workflow_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "step_order",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "total_steps",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 3,
+        "name": "status",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "requested_by",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 5,
+        "name": "description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "payload",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 7,
+        "name": "trigger_type?",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "fefa0a23e4299adf593b8ac6d15b1e6a22388f0352c79f80d862dc55ee9b5235"
+}

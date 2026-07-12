@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT approver_user_id FROM approval_workflow_steps WHERE workflow_id = $1 AND step_order = $2",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "approver_user_id",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "d41587ab6033afcd9a2ded945a35872644a6e040684f69f77a4a0764d6123fff"
+}

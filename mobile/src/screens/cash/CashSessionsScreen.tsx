@@ -31,6 +31,7 @@ export default function CashSessionsScreen({
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
 
   const [workspaceId, setWorkspaceId] = useState("");
   const [openingFloat, setOpeningFloat] = useState("");
@@ -84,11 +85,15 @@ export default function CashSessionsScreen({
   const handleMovement = async (type: "In" | "Out") => {
     if (!token || !myOpenSession) return;
     setError(null);
+    setInfo(null);
     setIsRecording(type);
     try {
-      await recordCashMovement(myOpenSession.id, type, movementAmount, movementReason.trim() || undefined, token);
+      const result = await recordCashMovement(myOpenSession.id, type, movementAmount, movementReason.trim() || undefined, token);
       setMovementAmount("");
       setMovementReason("");
+      if (result.pending_approval) {
+        setInfo("This cash-out is over the approval threshold — it's pending sign-off and will be recorded once approved.");
+      }
       await load();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Unable to reach the server");
@@ -119,6 +124,7 @@ export default function CashSessionsScreen({
       <Text style={styles.subheading}>{sessions.length} total</Text>
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
+      {info ? <Text style={styles.info}>{info}</Text> : null}
 
       {isLoading ? (
         <ActivityIndicator color={colors.brand.brown} />
@@ -241,6 +247,10 @@ const styles = StyleSheet.create({
   },
   error: {
     color: colors.semantic.danger,
+    fontSize: typography.caption.fontSize,
+  },
+  info: {
+    color: colors.semantic.warning,
     fontSize: typography.caption.fontSize,
   },
   card: {

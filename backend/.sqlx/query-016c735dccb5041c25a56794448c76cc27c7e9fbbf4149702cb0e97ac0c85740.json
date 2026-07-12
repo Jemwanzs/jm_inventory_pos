@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT\n            ar.id, ar.module, ar.reference_type, ar.reference_id, ar.description, ar.status,\n            ru.email AS requested_by_email,\n            du.email AS \"decided_by_email?\",\n            ar.decision_notes, ar.created_at, ar.decided_at\n        FROM approval_requests ar\n        JOIN users ru ON ru.id = ar.requested_by\n        LEFT JOIN users du ON du.id = ar.decided_by\n        WHERE ar.tenant_id = $1 AND ar.requested_by = $2\n        ORDER BY ar.created_at DESC\n        ",
+  "query": "\n        SELECT\n            ar.id, ar.module, ar.reference_type, ar.reference_id, ar.description, ar.status,\n            ru.email AS requested_by_email,\n            du.email AS \"decided_by_email?\",\n            ar.decision_notes, ar.step_order, ar.total_steps, ar.created_at, ar.decided_at\n        FROM approval_requests ar\n        JOIN users ru ON ru.id = ar.requested_by\n        LEFT JOIN users du ON du.id = ar.decided_by\n        WHERE ar.tenant_id = $1 AND ar.requested_by = $2\n        ORDER BY ar.created_at DESC\n        ",
   "describe": {
     "columns": [
       {
@@ -50,11 +50,21 @@
       },
       {
         "ordinal": 9,
+        "name": "step_order",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 10,
+        "name": "total_steps",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 11,
         "name": "created_at",
         "type_info": "Timestamptz"
       },
       {
-        "ordinal": 10,
+        "ordinal": 12,
         "name": "decided_at",
         "type_info": "Timestamptz"
       }
@@ -76,8 +86,10 @@
       false,
       true,
       false,
+      false,
+      false,
       true
     ]
   },
-  "hash": "f6071be721527b5254f28d91f31224c9665d29777707fd7668a7f8969fcf8fc2"
+  "hash": "016c735dccb5041c25a56794448c76cc27c7e9fbbf4149702cb0e97ac0c85740"
 }

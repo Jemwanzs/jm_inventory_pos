@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO notifications (tenant_id, user_id, title, body, link_module, link_reference_id)\n        VALUES ($1, $2, $3, $4, 'approvals', $5)\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Text",
+        "Text",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "d8d6d807a33056906a0b0dfe28edeb4ebbdac8845770b60a5ebd653e7b83cee6"
+}

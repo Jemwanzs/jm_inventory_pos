@@ -1,0 +1,34 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            SELECT aws.step_order, aws.approver_user_id, u.full_name AS approver_name\n            FROM approval_workflow_steps aws\n            JOIN users u ON u.id = aws.approver_user_id\n            WHERE aws.workflow_id = $1\n            ORDER BY aws.step_order\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "step_order",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "approver_user_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 2,
+        "name": "approver_name",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "ed6e79f1db2d7e23ef274e824987bf8e828b56f215460b3f429376201539394f"
+}

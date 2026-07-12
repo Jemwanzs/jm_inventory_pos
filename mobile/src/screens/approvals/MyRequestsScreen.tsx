@@ -49,6 +49,7 @@ export default function MyRequestsScreen() {
                   {r.module} ·{" "}
                   {new Date(r.created_at).toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
                   {r.decided_by_email ? ` · decided by ${r.decided_by_email}` : ""}
+                  {r.status === "Pending" && r.total_steps > 1 ? ` · step ${r.step_order} of ${r.total_steps}` : ""}
                 </Text>
               </View>
               <Text
