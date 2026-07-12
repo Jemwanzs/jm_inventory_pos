@@ -13,6 +13,7 @@ mod pos;
 mod procurement;
 mod production;
 mod products;
+mod reports;
 mod roles;
 mod settings;
 mod stock;
@@ -137,4 +138,5 @@ pub fn router() -> Router<AppState> {
         .route("/api/tasks", get(tasks::list_tasks).post(tasks::create_task))
         .route("/api/tasks/mine", get(tasks::list_my_tasks))
         .route("/api/tasks/{id}/status", axum::routing::patch(tasks::update_task_status))
+        .route("/api/reports/summary", get(reports::get_summary))
 }

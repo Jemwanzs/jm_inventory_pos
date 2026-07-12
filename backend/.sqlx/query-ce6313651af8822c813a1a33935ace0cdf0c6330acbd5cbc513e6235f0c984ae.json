@@ -1,0 +1,34 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            p.name AS product_name,\n            SUM(si.quantity) AS \"quantity_sold!\",\n            SUM(si.line_total) AS \"revenue!\"\n        FROM sale_items si\n        JOIN sales s ON s.id = si.sale_id\n        JOIN products p ON p.id = si.product_id\n        WHERE s.tenant_id = $1\n        GROUP BY p.name\n        ORDER BY SUM(si.line_total) DESC\n        LIMIT 5\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "product_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "quantity_sold!",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 2,
+        "name": "revenue!",
+        "type_info": "Numeric"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      null,
+      null
+    ]
+  },
+  "hash": "ce6313651af8822c813a1a33935ace0cdf0c6330acbd5cbc513e6235f0c984ae"
+}

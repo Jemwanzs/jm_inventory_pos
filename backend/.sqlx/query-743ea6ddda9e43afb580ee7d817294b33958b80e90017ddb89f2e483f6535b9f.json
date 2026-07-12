@@ -1,0 +1,46 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            COALESCE((SELECT SUM(total) FROM sales WHERE tenant_id = $1), 0) AS \"total_revenue!\",\n            COALESCE((SELECT COUNT(*) FROM sales WHERE tenant_id = $1), 0) AS \"sales_count!\",\n            COALESCE(\n                (SELECT SUM(quantity_out * unit_cost) FROM stock_movements\n                 WHERE tenant_id = $1 AND movement_type = 'Sale'),\n                0\n            ) AS \"total_cogs!\",\n            COALESCE(\n                (SELECT SUM(poi.quantity * poi.unit_cost)\n                 FROM purchase_order_items poi\n                 JOIN purchase_orders po ON po.id = poi.purchase_order_id\n                 WHERE po.tenant_id = $1 AND po.status = 'Received'),\n                0\n            ) AS \"total_purchases!\",\n            COALESCE((SELECT SUM(quantity_available * average_cost) FROM stock_balances WHERE tenant_id = $1), 0) AS \"stock_value!\"\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "total_revenue!",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 1,
+        "name": "sales_count!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "total_cogs!",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 3,
+        "name": "total_purchases!",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 4,
+        "name": "stock_value!",
+        "type_info": "Numeric"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "hash": "743ea6ddda9e43afb580ee7d817294b33958b80e90017ddb89f2e483f6535b9f"
+}

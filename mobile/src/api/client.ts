@@ -733,3 +733,23 @@ export function createTask(req: CreateTaskRequest, token: string): Promise<{ id:
 export function updateTaskStatus(id: string, status: string, token: string): Promise<void> {
   return request<void>(`/tasks/${id}/status`, { method: "PATCH", body: JSON.stringify({ status }) }, token);
 }
+
+export interface TopProduct {
+  product_name: string;
+  quantity_sold: string;
+  revenue: string;
+}
+
+export interface ReportsSummary {
+  total_revenue: string;
+  total_cogs: string;
+  gross_profit: string;
+  total_purchases: string;
+  sales_count: number;
+  stock_value: string;
+  top_products: TopProduct[];
+}
+
+export function getReportsSummary(token: string): Promise<ReportsSummary> {
+  return request<ReportsSummary>("/reports/summary", {}, token);
+}
