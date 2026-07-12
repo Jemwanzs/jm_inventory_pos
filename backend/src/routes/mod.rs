@@ -11,6 +11,7 @@ mod invites;
 mod numbering;
 mod pos;
 mod procurement;
+mod production;
 mod products;
 mod roles;
 mod settings;
@@ -124,4 +125,12 @@ pub fn router() -> Router<AppState> {
         .route("/api/approvals/my-requests", get(approvals::list_my_requests))
         .route("/api/approvals/{id}/approve", post(approvals::approve_request))
         .route("/api/approvals/{id}/reject", post(approvals::reject_request))
+        .route(
+            "/api/production/recipes",
+            get(production::list_recipes).post(production::create_recipe),
+        )
+        .route(
+            "/api/production/orders",
+            get(production::list_orders).post(production::create_order),
+        )
 }

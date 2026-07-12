@@ -1,0 +1,34 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT ri.product_id, ri.quantity_per_unit, p.name AS product_name\n        FROM recipe_ingredients ri\n        JOIN products p ON p.id = ri.product_id\n        WHERE ri.recipe_id = $1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "product_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "quantity_per_unit",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 2,
+        "name": "product_name",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "d68b6d9b513174164aafa164a1dc8fa1db9cafe8dfac039d4dbccec09934b965"
+}

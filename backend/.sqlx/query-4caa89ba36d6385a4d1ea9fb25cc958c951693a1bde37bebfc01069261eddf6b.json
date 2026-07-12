@@ -1,0 +1,46 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            r.id, r.name, p.name AS product_name,\n            COALESCE(i.ingredient_count, 0) AS \"ingredient_count!\",\n            r.is_active\n        FROM recipes r\n        JOIN products p ON p.id = r.product_id\n        LEFT JOIN (\n            SELECT recipe_id, COUNT(*) AS ingredient_count FROM recipe_ingredients GROUP BY recipe_id\n        ) i ON i.recipe_id = r.id\n        WHERE r.tenant_id = $1\n        ORDER BY r.name\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "product_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "ingredient_count!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 4,
+        "name": "is_active",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      null,
+      false
+    ]
+  },
+  "hash": "4caa89ba36d6385a4d1ea9fb25cc958c951693a1bde37bebfc01069261eddf6b"
+}

@@ -645,3 +645,56 @@ export function approveRequest(id: string, notes: string | undefined, token: str
 export function rejectRequest(id: string, notes: string | undefined, token: string): Promise<void> {
   return request<void>(`/approvals/${id}/reject`, { method: "POST", body: JSON.stringify({ notes }) }, token);
 }
+
+export interface Recipe {
+  id: string;
+  name: string;
+  product_name: string;
+  ingredient_count: number;
+  is_active: boolean;
+}
+
+export interface IngredientRequest {
+  product_id: string;
+  quantity_per_unit: string;
+}
+
+export interface CreateRecipeRequest {
+  product_id: string;
+  name: string;
+  ingredients: IngredientRequest[];
+}
+
+export function listRecipes(token: string): Promise<Recipe[]> {
+  return request<Recipe[]>("/production/recipes", {}, token);
+}
+
+export function createRecipe(req: CreateRecipeRequest, token: string): Promise<{ id: string }> {
+  return request<{ id: string }>("/production/recipes", { method: "POST", body: JSON.stringify(req) }, token);
+}
+
+export interface ProductionOrder {
+  id: string;
+  recipe_name: string;
+  workspace_name: string;
+  quantity_produced: string;
+  unit_cost: string;
+  created_at: string;
+}
+
+export function listProductionOrders(token: string): Promise<ProductionOrder[]> {
+  return request<ProductionOrder[]>("/production/orders", {}, token);
+}
+
+export function createProductionOrder(
+  recipe_id: string,
+  workspace_id: string,
+  quantity_produced: string,
+  token: string
+): Promise<{ id: string; unit_cost: string }> {
+  return request(
+    "/production/orders",
+    { method: "POST", body: JSON.stringify({ recipe_id, workspace_id, quantity_produced }) },
+    token
+  );
+}
