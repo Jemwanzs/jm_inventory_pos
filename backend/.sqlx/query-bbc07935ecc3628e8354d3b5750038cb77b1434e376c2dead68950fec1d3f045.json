@@ -1,0 +1,64 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            t.id, t.title, t.description, t.status, t.priority,\n            u.email AS \"assigned_to_email?\",\n            t.due_date, t.created_at\n        FROM tasks t\n        LEFT JOIN users u ON u.id = t.assigned_to\n        WHERE t.tenant_id = $1\n        ORDER BY t.created_at DESC\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "status",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "priority",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "assigned_to_email?",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "due_date",
+        "type_info": "Date"
+      },
+      {
+        "ordinal": 7,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "bbc07935ecc3628e8354d3b5750038cb77b1434e376c2dead68950fec1d3f045"
+}

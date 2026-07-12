@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO tasks (tenant_id, title, description, priority, assigned_to, due_date, created_by)\n        VALUES ($1, $2, $3, $4, $5, $6, $7)\n        RETURNING id\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Text",
+        "Text",
+        "Text",
+        "Uuid",
+        "Date",
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "6ba4299d892449b050559fd7f216aec715e5d929b5f236f731c027c47951b803"
+}

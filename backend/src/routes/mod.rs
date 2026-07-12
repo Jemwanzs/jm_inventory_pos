@@ -17,6 +17,7 @@ mod roles;
 mod settings;
 mod stock;
 mod suppliers;
+mod tasks;
 mod workspaces;
 
 use axum::{
@@ -133,4 +134,7 @@ pub fn router() -> Router<AppState> {
             "/api/production/orders",
             get(production::list_orders).post(production::create_order),
         )
+        .route("/api/tasks", get(tasks::list_tasks).post(tasks::create_task))
+        .route("/api/tasks/mine", get(tasks::list_my_tasks))
+        .route("/api/tasks/{id}/status", axum::routing::patch(tasks::update_task_status))
 }

@@ -698,3 +698,38 @@ export function createProductionOrder(
     token
   );
 }
+
+export interface Task {
+  id: string;
+  title: string;
+  description: string | null;
+  status: string;
+  priority: string;
+  assigned_to_email: string | null;
+  due_date: string | null;
+  created_at: string;
+}
+
+export interface CreateTaskRequest {
+  title: string;
+  description?: string;
+  priority?: string;
+  assigned_to?: string;
+  due_date?: string;
+}
+
+export function listTasks(token: string): Promise<Task[]> {
+  return request<Task[]>("/tasks", {}, token);
+}
+
+export function listMyTasks(token: string): Promise<Task[]> {
+  return request<Task[]>("/tasks/mine", {}, token);
+}
+
+export function createTask(req: CreateTaskRequest, token: string): Promise<{ id: string }> {
+  return request<{ id: string }>("/tasks", { method: "POST", body: JSON.stringify(req) }, token);
+}
+
+export function updateTaskStatus(id: string, status: string, token: string): Promise<void> {
+  return request<void>(`/tasks/${id}/status`, { method: "PATCH", body: JSON.stringify({ status }) }, token);
+}

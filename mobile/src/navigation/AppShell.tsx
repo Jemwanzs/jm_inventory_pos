@@ -15,6 +15,8 @@ import POSTerminalScreen from "../screens/pos/POSTerminalScreen";
 import SalesListScreen from "../screens/pos/SalesListScreen";
 import ProductionOrdersScreen from "../screens/production/ProductionOrdersScreen";
 import RecipesScreen from "../screens/production/RecipesScreen";
+import MyTasksScreen from "../screens/tasks/MyTasksScreen";
+import TaskBoardScreen from "../screens/tasks/TaskBoardScreen";
 import MoreMenuScreen from "../screens/MoreMenuScreen";
 import PlaceholderScreen from "../screens/PlaceholderScreen";
 import AddStockScreen from "../screens/inventory/AddStockScreen";
@@ -90,6 +92,8 @@ const REAL_SCREENS: Record<string, React.ComponentType<any>> = {
   "Approvals.MyRequests": MyRequestsScreen,
   "Production.Recipes": RecipesScreen,
   "Production.Orders": ProductionOrdersScreen,
+  "Tasks.Board": TaskBoardScreen,
+  "Tasks.Mine": MyTasksScreen,
 };
 
 export default function AppShell() {

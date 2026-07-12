@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE tasks SET status = $3, updated_at = now() WHERE id = $1 AND tenant_id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "e8e05e2c5b4c1aac5f937d1639efd97b4a01b623c6be9ecce9965044c2f84766"
+}
