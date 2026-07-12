@@ -7,6 +7,7 @@ import { useSettingsCategory } from "../../hooks/useSettingsCategory";
 
 interface BusinessProfile {
   name: string;
+  logo_url: string;
   currency: string;
   contact_email: string;
   contact_phone: string;
@@ -17,6 +18,7 @@ interface BusinessProfile {
 
 const DEFAULTS: BusinessProfile = {
   name: "",
+  logo_url: "",
   currency: "KES",
   contact_email: "",
   contact_phone: "",
@@ -53,6 +55,13 @@ export default function BusinessProfileScreen() {
         value={values.name}
         onChangeText={(text) => setField("name", text)}
         placeholder="JMS Kenya"
+      />
+      <TextField
+        label="Logo URL (optional)"
+        value={values.logo_url}
+        onChangeText={(text) => setField("logo_url", text)}
+        placeholder="https://example.com/logo.png"
+        autoCapitalize="none"
       />
       <ChipSelect
         label="Currency"

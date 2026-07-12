@@ -1,12 +1,18 @@
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import { getSettings } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import { BrandMark } from "../components/BrandMark";
 import { colors, radii, spacing, typography } from "../theme";
 import { defaultScreenFor, findModule, findScreen, MODULE_TREE } from "./screenTree";
+
+interface BusinessBrand {
+  name: string;
+  logo_url: string;
+}
 
 const COLLAPSE_PREFERENCE_KEY = "inventory_pos.sidebar_collapsed";
 const EXPANDED_WIDTH = 260;
@@ -18,16 +24,26 @@ interface SidebarProps {
 }
 
 export function Sidebar({ activeRoute, onNavigate }: SidebarProps) {
-  const { signOut } = useAuth();
+  const { signOut, token } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [expandedModule, setExpandedModule] = useState<string | null>(() => findScreen(activeRoute)?.module.key ?? "Dashboard");
   const [expandedBundle, setExpandedBundle] = useState<string | null>(() => findScreen(activeRoute)?.bundle.key ?? null);
+  const [brand, setBrand] = useState<BusinessBrand>({ name: "JMS Kenya", logo_url: "" });
 
   useEffect(() => {
     AsyncStorage.getItem(COLLAPSE_PREFERENCE_KEY).then((value) => {
       if (value === "true") setCollapsed(true);
     });
   }, []);
+
+  useEffect(() => {
+    if (!token) return;
+    getSettings<BusinessBrand>("business", token)
+      .then((values) => {
+        if (values.name) setBrand({ name: values.name, logo_url: values.logo_url ?? "" });
+      })
+      .catch(() => {});
+  }, [token]);
 
   // Only one module's submenu — and within it, only one bundle — expands
   // at a time (docs/ui-ux.md Desktop Layout), kept in sync with whatever
@@ -68,8 +84,16 @@ export function Sidebar({ activeRoute, onNavigate }: SidebarProps) {
   return (
     <View style={[styles.container, { width: collapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH }]}>
       <View style={styles.header}>
-        <BrandMark size={32} />
-        {!collapsed && <Text style={styles.brandLabel}>JMS Kenya</Text>}
+        {brand.logo_url ? (
+          <Image source={{ uri: brand.logo_url }} style={styles.logoImage} resizeMode="contain" />
+        ) : (
+          <BrandMark size={32} />
+        )}
+        {!collapsed && (
+          <Text style={styles.brandLabel} numberOfLines={1}>
+            {brand.name}
+          </Text>
+        )}
       </View>
 
       <ScrollView
@@ -205,9 +229,15 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.lg,
   },
   brandLabel: {
+    flexShrink: 1,
     color: colors.sidebar.text,
     fontWeight: "700",
     fontSize: typography.subheading.fontSize,
+  },
+  logoImage: {
+    width: 32,
+    height: 32,
+    borderRadius: radii.md,
   },
   scroll: {
     flex: 1,
